@@ -7,10 +7,8 @@ const Page = () => {
     return (
         <StyledWrapper>
             <div className="banner"></div>
-            <div>
-                <CardGroup />
-            </div>
-            <div>熱銷商品</div>
+            <CardGroup title="最新商品" />
+            <CardGroup title="熱銷商品" />
         </StyledWrapper>
     )
 }

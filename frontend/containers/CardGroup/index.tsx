@@ -2,10 +2,24 @@ import * as React from 'react'
 import Card from '@components/Card'
 import { StyledWrapper } from './styled'
 
-const Container: React.FC = (props) => {
+interface Props {
+    title: string
+}
+
+const Container: React.FC<Props> = (props) => {
     return (
         <StyledWrapper>
-            <Card />
+            <div className="title">
+                <h2>{props.title}</h2>
+            </div>
+            <div className="itemWrap">
+                <Card className="item" />
+                <Card className="item" />
+                <Card className="item" />
+                <Card className="item" />
+                <Card className="item" />
+                <Card className="item" />
+            </div>
         </StyledWrapper>
     )
 }

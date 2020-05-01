@@ -4,8 +4,16 @@ export const GlobalStyle = createGlobalStyle`
   body {
     margin: 0;
     padding: 0;
+    background: ${(props) => props.theme.colors.gray}
   }
-  background: ${(props) => props.theme.colors.secondary}
+
+  .pointer {
+      cursor: pointer;
+  }
+  
+  .primaryColor {
+      color: ${(props) => props.theme.colors.primary}
+  }
 `
 
 export const theme = {
@@ -25,6 +33,7 @@ export const theme = {
         danger: '',
         warning: '',
         info: '#f3fafe',
+        gray: '#fbfbfb',
     },
 }
 
