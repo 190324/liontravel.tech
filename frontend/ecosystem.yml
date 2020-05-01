@@ -1,0 +1,10 @@
+apps:
+  - script: 'yarn start'
+    name: 'frontend'
+    watch: true
+    watch_delay: 1000
+    max_restarts: 30
+    restart_delay: 2000
+    ignore_watch: ['node_modules', '.next']
+    watch_options:
+      usePolling: true
