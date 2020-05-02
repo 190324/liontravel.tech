@@ -1,6 +1,10 @@
 extend type Query  {
     product(no: String!): R_Product
-    products(filter: I_ProductFilter): R_Products
+    products(
+        filter: I_ProductFilter,
+        page: Int = 1
+        per_page: Int = 25
+    ): R_Products
 }
 
 extend type Mutation {
