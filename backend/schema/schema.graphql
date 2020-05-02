@@ -1,3 +1,14 @@
 type Query {
-    hello: String!
+    ping: String!
+}
+
+type Mutation {
+    ping: String!
+}
+
+type PageInfo {
+    total: Int
+    last_page: Int
+    current_page: Int
+    per_page: Int
 }
