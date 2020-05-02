@@ -1,0 +1,14 @@
+schema:
+  - ./schema/**/*.graphql
+exec:
+  filename: build/gqlgen/generated.go
+  package: generated
+model:
+  filename: build/gqlgen/models/models_gen.go
+  package: models_gen
+resolver:
+  layout: follow-schema
+  dir: internal/app/graphql/resolvers
+  package: resolvers
+autobind:
+  - "liontravel.tech/internal/app/models"

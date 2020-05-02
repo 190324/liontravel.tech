@@ -11,12 +11,12 @@ export const StyledWrapper = styled.button<any>`
     padding: 15px 32px;
     text-align: center;
     text-decoration: none;
-    display: inline-block;
+    display: ${(props) => props.display};
     font-size: 16px;
     cursor: pointer;
+    width: ${(props) => (props.display == 'block' ? '100%' : 'auto')};
 `
 
 StyledWrapper.defaultProps = {
-    bg: 'white',
-    color: 'black',
+    display: 'inline-block',
 }

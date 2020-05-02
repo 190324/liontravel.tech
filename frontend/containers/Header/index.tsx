@@ -38,6 +38,11 @@ const Container = () => {
                         <div className="item">
                             <Avator size="30" src="//via.placeholder.com/30" />
                         </div>
+                        <div className="item login">
+                            <Link href="/login">
+                                <a>登入</a>
+                            </Link>
+                        </div>
                     </div>
                 </div>
             </StyledWrapper>

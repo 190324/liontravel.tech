@@ -4,12 +4,9 @@ import { StyledWrapper } from './styled'
 const Component = (props) => {
     return (
         <StyledWrapper
-            bg={props.bg}
-            color={props.color}
-            display={props.display}
-        >
-            {props.children}
-        </StyledWrapper>
+            type={props.type}
+            placeholder={props.placeholder}
+        ></StyledWrapper>
     )
 }
 

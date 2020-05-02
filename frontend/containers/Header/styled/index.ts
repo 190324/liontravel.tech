@@ -26,6 +26,12 @@ export const StyledWrapper = styled.div`
                         text-decoration: none;
                     }
                 }
+                &.login {
+                    a {
+                        color: #fff;
+                        text-decoration: none;
+                    }
+                }
             }
         }
     }
