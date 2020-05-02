@@ -36,6 +36,11 @@ type UrlEncodeReplaceCharStruct struct {
 	Replace string
 }
 
+type InvoiceResponseStruct struct {
+	MerchantID string
+	Data string
+}
+
 var UrlEncodeReplaceChar = []UrlEncodeReplaceCharStruct{
 	//{
 	//	Origin:  "-",

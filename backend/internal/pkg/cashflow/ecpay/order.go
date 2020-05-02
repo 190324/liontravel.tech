@@ -19,7 +19,7 @@ func UrlEncodeReplace(str string) string{
 	return str
 }
 
-func Create() {
+func CreateOrder() {
 	merchantID := viper.GetString("cashflow.ecpay.merchantID")
 	hashKey := viper.GetString("cashflow.ecpay.hashKey")
 	hashIV := viper.GetString("cashflow.ecpay.hashIV")

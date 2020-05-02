@@ -1,0 +1,35 @@
+extend type Query  {
+    me: R_User
+}
+
+extend type Mutation {
+    login(input: I_Login): R_User
+    user(input: I_User): R_User
+}
+
+type User {
+    no: String!
+    name: String!
+}
+
+type R_User {
+    code: Int!
+    msg: String!
+    data: User
+}
+
+input I_Login {
+    email: String
+    password: String
+    app_id: String
+    app_type: String
+}
+
+input I_User {
+    no: String!
+    name: String!
+    email: String
+    password: String
+    app_id: String
+    app_type: String
+}

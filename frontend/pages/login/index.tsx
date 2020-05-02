@@ -22,7 +22,7 @@ const Page = () => {
                         </Button>
                     </div>
                     <div className="item extra">
-                        <Link href="/">
+                        <Link href="/signup">
                             <a>免費註冊</a>
                         </Link>
                         <Link href="/">

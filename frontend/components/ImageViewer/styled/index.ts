@@ -15,7 +15,6 @@ const StyledSwitchArrow = css`
 `
 
 export const StyledWrapper = styled.div<any>`
-    background: ${(props) => props.theme.colors.primary};
     overflow: hidden;
     .viewer {
         font-size: 0;

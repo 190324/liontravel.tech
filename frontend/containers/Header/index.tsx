@@ -43,6 +43,11 @@ const Container = () => {
                                 <a>登入</a>
                             </Link>
                         </div>
+                        <div className="item login">
+                            <Link href="/signup">
+                                <a>註冊</a>
+                            </Link>
+                        </div>
                     </div>
                 </div>
             </StyledWrapper>
