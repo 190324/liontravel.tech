@@ -12,3 +12,8 @@ type PageInfo {
     current_page: Int
     per_page: Int
 }
+
+type R_Basic {
+    code: Int!
+    msg: String!
+}

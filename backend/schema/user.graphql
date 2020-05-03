@@ -1,21 +1,23 @@
 extend type Query  {
-    me: R_User
+    me: R_Basic!
 }
 
 extend type Mutation {
-    login(input: I_Login): R_User
-    user(input: I_User): R_User
+    login(input: I_Login): R_Auth!
+    user(input: I_User): R_Basic!
 }
 
-type User {
-    no: String!
-    name: String!
+type AuthToken {
+    access_token: String!
+    refresh_token: String!
+    token_type: String!
+    expires: Int
 }
 
-type R_User {
+type R_Auth {
     code: Int!
     msg: String!
-    data: User
+    data: AuthToken
 }
 
 input I_Login {

@@ -7,6 +7,11 @@ const Component = (props) => {
             bg={props.bg}
             color={props.color}
             display={props.display}
+            onClick={() => {
+                if (props.onClick) {
+                    props.onClick()
+                }
+            }}
         >
             {props.children}
         </StyledWrapper>

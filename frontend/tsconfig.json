@@ -19,7 +19,8 @@
             "@containers/*": ["./containers/*"],
             "@components/*": ["./components/*"],
             "@lib/*": ["lib/*"],
-            "@styled/*": ["styled/*"]
+            "@styled/*": ["styled/*"],
+            "@graphql/*": ["graphql/*"]
         }
     },
     "exclude": ["node_modules"],

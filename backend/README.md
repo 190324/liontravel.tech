@@ -5,6 +5,7 @@ Create Model
 ```
 go run cmd/artisan.go model -name [User]
 ```
+
 Create migration sql file
 
 ```
@@ -26,5 +27,6 @@ go run cmd/artisan.go gql
 Generate private key
 
 ```
-ssh-keygen -t rsa -b 4096 -m PEM -f jwtRS256.key
+openssl genrsa -out access.key 2048
+openssl rsa -in access.key -pubout > access.key.pub
 ```

@@ -6,6 +6,11 @@ const Component = (props) => {
         <StyledWrapper
             type={props.type}
             placeholder={props.placeholder}
+            onChange={(e) => {
+                if (props.onChange) {
+                    props.onChange(e.target.value)
+                }
+            }}
         ></StyledWrapper>
     )
 }
