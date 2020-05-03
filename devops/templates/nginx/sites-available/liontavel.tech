@@ -1,7 +1,3 @@
-upstream webapp {
-    server localhost:8080;
-}
-
 server {
     listen 80;
     listen [::]:80;
@@ -15,26 +11,13 @@ server {
     return 301 https://$host$request_uri;
 }
 
-# reverse proxy
-server {
-    listen 443 ssl http2;
-    listen [::]:443 ssl http2;
-    include /etc/nginx/conf.d/extra/ssl.conf;
-
-    server_name reverse.{{ domainName }};
-
-    location / {
-        proxy_pass http://webapp;
-    }
-}
-
 # api
 server {
     listen 443 ssl http2;
     listen [::]:443 ssl http2;
     include /etc/nginx/conf.d/extra/ssl.conf;
 
-    server_name api.{{ domainName }};
+    server_name {{ domainName }} *.{{ domainName }};
 
     root /var/www/html;
     index index.html;
