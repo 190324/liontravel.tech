@@ -79,7 +79,10 @@ const Container = () => {
                                         <a
                                             onClick={(e) => {
                                                 e.preventDefault()
-                                                Cookies.remove('access_token')
+                                                Cookies.remove('access_token', {
+                                                    path: '',
+                                                    domain: `.${process.env.AUTH_DOMAIN}`,
+                                                })
                                                 location.reload()
                                             }}
                                         >
