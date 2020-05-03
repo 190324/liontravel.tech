@@ -1,4 +1,6 @@
 import * as React from 'react'
+import { withApollo } from '@lib/withApollo'
+import { withAuth } from '@lib/withAuth'
 
 const Page = () => {
     return (
@@ -50,4 +52,4 @@ const Page = () => {
     )
 }
 
-export default Page
+export default withApollo(withAuth(Page))

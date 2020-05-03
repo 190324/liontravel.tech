@@ -2,9 +2,6 @@
 package main
 
 import (
-	generated "liontravel.tech/build/gqlgen"
-	"liontravel.tech/internal/app/graphql/resolvers"
-	_ "liontravel.tech/internal/pkg/env"
 	"context"
 	"errors"
 	"github.com/99designs/gqlgen/graphql/handler"
@@ -12,6 +9,10 @@ import (
 	"github.com/go-chi/chi"
 	"github.com/go-chi/cors"
 	"github.com/spf13/viper"
+	generated "liontravel.tech/build/gqlgen"
+	"liontravel.tech/internal/app/graphql/resolvers"
+	"liontravel.tech/internal/app/middlewares"
+	_ "liontravel.tech/internal/pkg/env"
 	"log"
 	"net/http"
 	"runtime/debug"
@@ -45,8 +46,10 @@ func main() {
 		MaxAge:           300, // Maximum value not ignored by any of major browsers
 	})
 	router.Use(cors.Handler)
+	router.Use(middlewares.Auth())
 
 	router.Group(func(r chi.Router) {
+
 		r.Route("/graphql", func(r chi.Router) {
 			r.Handle("/playground", playground.Handler("LionTech", "/graphql"))
 			r.Handle("/", srv)

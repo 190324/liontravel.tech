@@ -1,12 +1,13 @@
 import * as React from 'react'
 import { withApollo } from '@lib/withApollo'
-import { useQuery } from '@apollo/react-hooks'
-import { QUERY_ME } from '@graphql/user'
+import { withAuth } from '@lib/withAuth'
 
 const Page = () => {
-    const { loading, error, data } = useQuery(QUERY_ME)
-
-    return <div>Member</div>
+    return (
+        <div>
+            <div>Member</div>
+        </div>
+    )
 }
 
-export default withApollo(Page, { ssr: false })
+export default withApollo(withAuth(Page), { ssr: false })

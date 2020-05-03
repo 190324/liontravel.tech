@@ -7,6 +7,7 @@ import (
     "liontravel.tech/internal/pkg/encrypt"
     _ "liontravel.tech/internal/pkg/env"
     "time"
+    "log"
 )
 
 type AuthToken struct {
@@ -31,6 +32,18 @@ type UserClaims struct {
     No string
     Name *string
     jwt.StandardClaims
+}
+
+func (m *User) FindByNo(no string) error{
+    db, _ := config.NewDB()
+    db.Where("no = ?", no).First(m)
+
+    if db.Error != nil {
+        log.Printf("Error: %v", db.Error)
+        return db.Error
+    }
+
+    return nil
 }
 
 func (m *User) Save() {
@@ -70,7 +83,7 @@ func (m *User) Check() bool{
 
 func (m *User) AuthToken() *AuthToken{
 
-    var expiresMinute time.Duration = 1
+    var expiresMinute time.Duration = 60
 
     accessClaims := &UserClaims{
         No: m.No,
@@ -103,7 +116,7 @@ func (m *User) AuthCheck(token string) (*UserClaims, int)  {
     publicPath := viper.GetString("auth.user.keyPath.access.public")
     claims := &UserClaims{}
 
-    result := encrypt.CheckRS256Token(publicPath, token, claims)
+    status := encrypt.CheckRS256Token(publicPath, token, claims)
 
-    return claims, result
+    return claims, status
 }

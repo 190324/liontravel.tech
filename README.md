@@ -4,30 +4,6 @@
 
 ln -s /your/storage/path/\* /your/project/path/public/static
 
-users
-id
-no
-name
-email
-password
-contact_email
-
-open_ids
-id
-user_id
-app_id
-app_type
-
-products
-id
-no
-name
-brief
-desp
-list_price
-sale_price
-qty
-
 categories
 id
 name

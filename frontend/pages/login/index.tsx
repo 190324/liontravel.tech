@@ -31,7 +31,6 @@ const Page = () => {
             switch (row.code) {
                 case 200:
                     let _data = row.data
-                    console.log('', _data.access_token)
                     Cookies.set('access_token', _data.access_token, {
                         expires: 7,
                         domain: process.env.AUTH_DOMAIN,
