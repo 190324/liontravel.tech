@@ -29,8 +29,8 @@ type User struct {
 }
 
 type UserClaims struct {
-    No string
-    Name *string
+    No string `json:"no"`
+    Name *string `json:"name"`
     jwt.StandardClaims
 }
 

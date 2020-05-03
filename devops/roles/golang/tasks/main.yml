@@ -1,0 +1,34 @@
+- name: before gvm install
+  apt:
+    name:
+      - binutils
+      - bison
+      - gcc
+      - make
+  become: yes
+
+- name: check gvm install
+  shell: |
+    source ~/.gvm/scripts/gvm
+    gvm version
+  register: gvm_install_check
+  changed_when: false
+  failed_when: false
+  args:
+    executable: /bin/bash
+
+- name: install gvm
+  shell: >
+    bash < <(curl -s -S -L https://raw.githubusercontent.com/moovweb/gvm/master/binscripts/gvm-installer)
+  args:
+    executable: /bin/bash
+  when: gvm_install_check.rc != 0
+
+- name: install golang
+  shell: |
+    source ~/.gvm/scripts/gvm
+    gvm install go{{ version }} -B
+    gvm use go{{ version }} [--default]
+  args:
+    executable: /bin/bash
+

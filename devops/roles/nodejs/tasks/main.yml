@@ -1,0 +1,45 @@
+- name: check nvm install
+  shell: |
+    source ~/.nvm/nvm.sh
+    nvm --version
+  register: nvm_install_check
+  changed_when: false
+  failed_when: false
+  args:
+    executable: /bin/bash
+
+- name: Install nvm
+  shell: >
+    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.35.3/install.sh | bash
+  args:
+    creates: "{{ ansible_env.HOME }}/.nvm/nvm.sh"
+    warn: false
+  when: nvm_install_check.rc != 0
+
+- name: set node version
+  shell: |
+    source ~/.nvm/nvm.sh
+    nvm install {{ version }}
+    nvm use {{ version }}
+    nvm alias default {{ version }}
+  vars:
+    executable: /bin/bash
+  args:
+    executable: /bin/bash
+
+#- name: install pm2
+#  npm:
+#    name: pm2
+#    global: yes
+#    executable: ~/.nvm/versions/node/v12.16.1/bin/npm
+#
+#- name: install yarn
+#  npm:
+#    name: yarn
+#    global: yes
+- name: install pm2 yarn
+  shell: |
+    source ~/.nvm/nvm.sh
+    npm install -g pm2 yarn
+  args:
+    executable: /bin/bash

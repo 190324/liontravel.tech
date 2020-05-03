@@ -1,0 +1,32 @@
+---
+- hosts: web
+  vars_files: ../vars/secret.yml
+  roles:
+    - role: common
+      become: yes
+
+    - role: nginx
+      become: yes
+
+  tasks:
+    - name: Set timezone to Asia/Taipei
+      timezone:
+        name: Asia/Taipei
+      become: yes
+
+    - import_role:
+        name: nodejs
+      vars:
+        version: v12.16.1
+
+    - import_role:
+        name: golang
+      vars:
+        version: 1.13.9
+
+    - import_role:
+        name: mariadb
+      vars:
+        mariadb_root_password: "{{ mariadb.root_password }}"
+        mariadb_socket: "{{ mariadb.socket }}"
+      become: yes

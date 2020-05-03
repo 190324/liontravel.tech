@@ -6,8 +6,25 @@ import Bell from '@components/Icon/Bell'
 import Search from '@components/Icon/Search'
 import Avator from '@components/Avator'
 
+import Cookies from 'js-cookie'
+import jwt_decode from 'jwt-decode'
+
 const Container = () => {
+    const [isLogin, setIsLogin] = React.useState(false)
     const [isOpen, setIsOpen] = React.useState(false)
+
+    React.useEffect(() => {
+        try {
+            const user = jwt_decode(Cookies.get('access_token'))
+            if (user) {
+                setIsLogin(true)
+            } else {
+                setIsLogin(false)
+            }
+        } catch {
+            setIsLogin(false)
+        }
+    })
 
     return (
         <React.Fragment>
@@ -32,22 +49,46 @@ const Container = () => {
                         <div className="item">
                             <Search color="#FFF" fontSize="18px" />
                         </div>
-                        <div className="item">
-                            <Bell color="#FFF" fontSize="20px" />
-                        </div>
-                        <div className="item">
-                            <Avator size="30" src="//via.placeholder.com/30" />
-                        </div>
-                        <div className="item login">
-                            <Link href="/login">
-                                <a>登入</a>
-                            </Link>
-                        </div>
-                        <div className="item login">
-                            <Link href="/signup">
-                                <a>註冊</a>
-                            </Link>
-                        </div>
+
+                        {!isLogin ? (
+                            <>
+                                <div className="item login">
+                                    <Link href="/login">
+                                        <a>登入</a>
+                                    </Link>
+                                </div>
+                                <div className="item login">
+                                    <Link href="/signup">
+                                        <a>註冊</a>
+                                    </Link>
+                                </div>
+                            </>
+                        ) : (
+                            <>
+                                <div className="item">
+                                    <Bell color="#FFF" fontSize="20px" />
+                                </div>
+                                <div className="item">
+                                    <Avator
+                                        size="30"
+                                        src="//via.placeholder.com/30"
+                                    />
+                                </div>
+                                <div className="item login">
+                                    <Link href="/logout">
+                                        <a
+                                            onClick={(e) => {
+                                                e.preventDefault()
+                                                Cookies.remove('access_token')
+                                                location.reload()
+                                            }}
+                                        >
+                                            登出
+                                        </a>
+                                    </Link>
+                                </div>
+                            </>
+                        )}
                     </div>
                 </div>
             </StyledWrapper>
