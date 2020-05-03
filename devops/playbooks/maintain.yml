@@ -3,11 +3,11 @@
   vars:
     domainName: liontavel.tech
     webPath: /var/www/html
-    adminWebPath: /var/www/html/liontavel.tech/admin/public
-    projectPath: /var/www/html/liontavel.tech
-    projectFrontendPath: /var/www/html/liontavel.tech/frontend
-    projectBackendPath: /var/www/html/liontavel.tech/backend
-    storagePath: /var/www/html/storage
+    adminWebPath: /var/www/html/liontravel.tech/admin/public
+    projectPath: /var/www/html/liontravel.tech
+    projectFrontendPath: /var/www/html/liontravel.tech/frontend
+    projectBackendPath: /var/www/html/liontravel.tech/backend
+    storagePath: /var/www/html/storage/liontravel.tech
   tasks:
     - name: nginx setting
       template:
@@ -77,22 +77,19 @@
         state: directory
       with_items:
         - "{{ projectFrontendPath }}/public/static"
-        - "{{ projectFrontendPath }}/download/clinics/mask"
-        - "{{ projectFrontendPath }}/download/clinics/info"
-        - "{{ projectFrontendPath }}/download/clinics/latlng"
 
     - name: frontend yarn install
       shell: |
         pm2 delete frontend --silent
         cd {{ projectFrontendPath }}
         cp {{ storagePath }}/deploy/frontend/.env {{ projectFrontendPath }}
-        ln -s {{ storagePath }}/public/* {{ projectFrontendPath }}/public/static/
+        ln -s {{ storagePath }}/storage/* {{ projectFrontendPath }}/public/static/
         source ~/.nvm/nvm.sh
         yarn
         yarn build
         pm2 delete --silent "frontend"
         pm2 start ecosystem.yml --only "frontend"
-      #       pm2 start yarn --name "frontend" -- start
+
       args:
         executable: /bin/bash
 
@@ -109,9 +106,6 @@
         pm2 delete --silent "backend"
         pm2 start ecosystem.yml --only "backend"
 
-        go build internal/app/cron/kernel.go
-        pm2 delete --silent "kernel"
-        pm2 start ./kernel --name "kernel"
       args:
         executable: /bin/bash
       vars:

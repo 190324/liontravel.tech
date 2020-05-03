@@ -1,0 +1,10 @@
+apps:
+  - script: "./server"
+    name: "backend"
+    watch: true
+    watch_delay: 1000
+    max_restarts: 30
+    restart_delay: 2000
+    ignore_watch: ["tmp"]
+    watch_options:
+      usePolling: true
