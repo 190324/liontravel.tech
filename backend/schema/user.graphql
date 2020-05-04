@@ -1,37 +1,37 @@
-extend type Query  {
-    me: R_Basic!
+extend type Query {
+  me: R_Basic!
 }
 
 extend type Mutation {
-    login(input: I_Login): R_Auth!
-    user(input: I_User): R_Basic!
+  login(input: I_Login): R_Auth!
+  user(input: I_User): R_Basic!
 }
 
 type AuthToken {
-    access_token: String!
-    refresh_token: String!
-    token_type: String!
-    expires: Int
+  access_token: String!
+  refresh_token: String!
+  token_type: String!
+  expires: Int
 }
 
 type R_Auth {
-    code: Int!
-    msg: String!
-    data: AuthToken
+  code: Int!
+  msg: String!
+  data: AuthToken
 }
 
 input I_Login {
-    email: String
-    password: String
-    app_id: String
-    app_type: String
+  email: String
+  password: String
+  app_id: String
+  app_type: String
 }
 
 input I_User {
-    no: String!
-    name: String!
-    email: String
-    password: String
-    app_id: String
-    app_type: String
+  no: String
+  name: String!
+  email: String
+  password: String
+  app_id: String
+  app_type: String
 }

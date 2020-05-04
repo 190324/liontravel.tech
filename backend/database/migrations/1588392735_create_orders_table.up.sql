@@ -1,7 +1,21 @@
 CREATE TABLE `orders` (
-    `id`         BIGINT(20) NOT NULL AUTO_INCREMENT,
+    `id` BIGINT(20) NOT NULL AUTO_INCREMENT,
+    `no` VARCHAR(30) NOT NULL,
+    `user_id` BIGINT(20) NOT NULL,
+    `user_name` VARCHAR(50) NOT NULL,
+    `user_phone` VARCHAR(50) NOT NULL,
+    `user_address` VARCHAR(255) NOT NULL,
+    `receiver_name` VARCHAR(50) NOT NULL,
+    `receiver_phone` VARCHAR(50) NOT NULL,
+    `receiver_address` VARCHAR(255) NOT NULL,
+    `discount` FLOAT DEFAULT 0,
+    `total` FLOAT NOT NULL,
+    `payment_type` INT NOT NULL,
+    `payment_vendor` INT NOT NULL,
+    `invoice` VARCHAR(50) NULL,
     `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    `deleted_at` TIMESTAMP  NULL,
-    PRIMARY KEY (`id`)
+    `deleted_at` TIMESTAMP NULL,
+    PRIMARY KEY (`id`),
+    UNIQUE (`no`)
 );
