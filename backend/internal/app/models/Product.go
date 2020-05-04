@@ -1,15 +1,16 @@
 package models
 
 import (
+	"fmt"
 	"github.com/jinzhu/gorm"
 	"liontravel.tech/config"
 	"log"
 	"time"
-	"fmt"
 )
 
 type Product struct {
 	ID        int        `json:"id"`
+	UserID    int        `json:"user_id"`
 	No        string     `json:"no"`
 	Name      string     `json:"name"`
 	Qty       int        `json:"qty"`
@@ -34,6 +35,16 @@ func (m *Product) FindByNo(no string) error{
 	}
 
 	return nil
+}
+
+func (m *Product) Save() {
+	db, _ := config.NewDB()
+
+	_db := db.FirstOrInit(m, Product{
+		No: m.No,
+	})
+
+	_db.Save(m)
 }
 
 func (m *Product) Find(where []Where) (*gorm.DB, interface{},  error) {

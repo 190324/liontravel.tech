@@ -12,16 +12,6 @@ const StyledOrSeperate = css`
 export const StyledWrapper = styled.div`
     max-width: ${(props) => props.theme.size.tablet};
     margin: 0 auto;
-    .title {
-        font-weight: bold;
-        font-size: 24px;
-        padding: 30px 0;
-        &:before {
-            content: ' ';
-            border-left: 3px solid ${(props) => props.theme.colors.primary};
-            padding-right: 12px;
-        }
-    }
     .loginWrap {
         display: flex;
         justify-content: space-between;

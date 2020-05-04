@@ -10,6 +10,7 @@ require (
 	github.com/golang-migrate/migrate/v4 v4.10.0
 	github.com/iancoleman/strcase v0.0.0-20191112232945-16388991a334
 	github.com/jinzhu/gorm v1.9.12
+	github.com/rs/zerolog v1.15.0
 	github.com/spf13/viper v1.6.3
 	github.com/urfave/cli/v2 v2.2.0 // indirect
 	github.com/vektah/gqlparser/v2 v2.0.1

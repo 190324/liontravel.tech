@@ -1,3 +1,23 @@
 extend type Query  {
-    
+    carts(next: Int = 0): R_Carts!
+}
+
+extend type Mutation {
+    cart(product_id: Int!): R_Basic!
+}
+
+type Cart {
+    product: Product!
+    next: Int!
+}
+
+type R_Carts {
+    code: Int!
+    msg: String!
+    data: CartsPagination
+}
+
+type CartsPagination {
+    page_info: PageInfo!
+    edges: [Cart]!
 }

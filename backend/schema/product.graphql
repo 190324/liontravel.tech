@@ -1,18 +1,24 @@
 extend type Query  {
-    product(no: String!): R_Product
+    product(no: String!): R_Product!
     products(
         filter: I_ProductFilter,
         page: Int = 1
         per_page: Int = 25
-    ): R_Products
+    ): R_Products!
 }
 
 extend type Mutation {
-    product(input: I_Product, no: String): Product
+    product(input: I_Product!, no: String): R_Product!
 }
 
 type Product {
     no: String!
+    name: String!
+    list_price: Float
+    sale_price: Float!
+    brief: String
+    desp: String
+    qty: Int!
 }
 
 type R_Product {
@@ -38,6 +44,7 @@ input I_ProductFilter {
 
 input I_Product {
     name: String!
+    qty: Int!
     list_price: Float
     sale_price: Float!
     brief: String

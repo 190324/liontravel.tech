@@ -3,8 +3,8 @@ extend type Query {
 }
 
 extend type Mutation {
-  login(input: I_Login): R_Auth!
-  user(input: I_User): R_Basic!
+  login(input: I_Login!): R_Auth!
+  user(input: I_User!): R_Basic!
 }
 
 type AuthToken {
@@ -28,7 +28,6 @@ input I_Login {
 }
 
 input I_User {
-  no: String
   name: String!
   email: String
   password: String

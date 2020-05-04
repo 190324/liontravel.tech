@@ -11,11 +11,7 @@ import (
 	"liontravel.tech/internal/pkg/status"
 )
 
-type contextKey struct {
-	name string
-}
-
-func (r *mutationResolver) Login(ctx context.Context, input *models_gen.ILogin) (*models_gen.RAuth, error) {
+func (r *mutationResolver) Login(ctx context.Context, input models_gen.ILogin) (*models_gen.RAuth, error) {
 	oUser := &models.User{
 		Email:    input.Email,
 		Password: input.Password,
@@ -29,7 +25,7 @@ func (r *mutationResolver) Login(ctx context.Context, input *models_gen.ILogin) 
 	if isValid {
 		code = status.Success
 		oAuth = oUser.AuthToken()
-	}else {
+	} else {
 		code = status.Unauthorized
 		oAuth = nil
 	}
@@ -41,12 +37,15 @@ func (r *mutationResolver) Login(ctx context.Context, input *models_gen.ILogin) 
 	}, nil
 }
 
-func (r *mutationResolver) User(ctx context.Context, input *models_gen.IUser) (*models_gen.RBasic, error) {
+func (r *mutationResolver) User(ctx context.Context, input models_gen.IUser) (*models_gen.RBasic, error) {
 	oUser := &models.User{
-		No:       input.No,
 		Name:     input.Name,
 		Email:    input.Email,
 		Password: input.Password,
+	}
+
+	if IsLogin(ctx) {
+		oUser.No = GetUser(ctx).No
 	}
 
 	oUser.Save()
@@ -58,9 +57,6 @@ func (r *mutationResolver) User(ctx context.Context, input *models_gen.IUser) (*
 }
 
 func (r *queryResolver) Me(ctx context.Context) (*models_gen.RBasic, error) {
-	//oUser := &models.User{}
-	//_, result := oUser.AuthCheck("")
-
 	_status := middlewares.GetAuthStatus(ctx)
 
 	if _status == 0 {
@@ -69,6 +65,6 @@ func (r *queryResolver) Me(ctx context.Context) (*models_gen.RBasic, error) {
 
 	return &models_gen.RBasic{
 		Code: _status,
-		Msg: "",
-	},nil
+		Msg:  "",
+	}, nil
 }

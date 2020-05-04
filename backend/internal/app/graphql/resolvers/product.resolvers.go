@@ -5,16 +5,44 @@ package resolvers
 
 import (
 	"context"
-	"fmt"
 	"reflect"
 	"unsafe"
 
 	models_gen "liontravel.tech/build/gqlgen/models"
+	"liontravel.tech/internal/app/middlewares"
 	"liontravel.tech/internal/app/models"
+	"liontravel.tech/internal/pkg/status"
 )
 
-func (r *mutationResolver) Product(ctx context.Context, input *models_gen.IProduct, no *string) (*models.Product, error) {
-	panic(fmt.Errorf("not implemented"))
+func (r *mutationResolver) Product(ctx context.Context, input models_gen.IProduct, no *string) (*models_gen.RProduct, error) {
+	oProduct := &models.Product{}
+
+	if no != nil {
+		oProduct.FindByNo(*no)
+
+		if oProduct.UserID != middlewares.GetUser(ctx).ID {
+			return &models_gen.RProduct{
+				Code: status.BadRequest,
+				Msg:  "",
+				Data: nil,
+			}, nil
+		}
+	}
+
+	oProduct.Name = input.Name
+	oProduct.SalePrice = input.SalePrice
+	oProduct.ListPrice = input.ListPrice
+	oProduct.Qty = input.Qty
+	oProduct.Brief = input.Brief
+	oProduct.Desp = input.Desp
+
+	oProduct.Save()
+
+	return &models_gen.RProduct{
+		Code: status.Success,
+		Msg:  "",
+		Data: oProduct,
+	}, nil
 }
 
 func (r *queryResolver) Product(ctx context.Context, no string) (*models_gen.RProduct, error) {

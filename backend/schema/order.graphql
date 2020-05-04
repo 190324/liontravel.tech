@@ -1,3 +1,34 @@
 extend type Query  {
-    
+    order: R_Order!
+    orders: R_Orders!
+}
+
+type Order {
+    no: String!
+    user_name: String!
+    user_phone: String!
+    user_address: String!
+    receiver_name: String!
+    receiver_phone: String!
+    receiver_address: String!
+    discount: Float
+    total: Float!
+    status: Int!
+}
+
+type R_Order {
+    code: Int!
+    msg: String!
+    data: Order
+}
+
+type R_Orders {
+    code: Int!
+    msg: String!
+    data: OrdersPagination
+}
+
+type OrdersPagination {
+    page_info: PageInfo!
+    edges: [Order]!
 }

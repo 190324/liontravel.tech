@@ -10,7 +10,7 @@ export const QUERY_ME = gql`
 `
 
 export const MUTATION_LOGIN = gql`
-    mutation LOGIN($input: I_Login) {
+    mutation LOGIN($input: I_Login!) {
         login(input: $input) {
             code
             data {
@@ -19,6 +19,15 @@ export const MUTATION_LOGIN = gql`
                 token_type
                 expires
             }
+        }
+    }
+`
+
+export const MUTATION_SIGNUP = gql`
+    mutation SIGNUP($input: I_User!) {
+        user(input: $input) {
+            code
+            msg
         }
     }
 `

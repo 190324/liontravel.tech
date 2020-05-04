@@ -6,8 +6,8 @@ import (
     "liontravel.tech/config"
     "liontravel.tech/internal/pkg/encrypt"
     _ "liontravel.tech/internal/pkg/env"
-    "time"
     "log"
+    "time"
 )
 
 type AuthToken struct {
@@ -51,16 +51,18 @@ func (m *User) Save() {
 
     originPassword := m.Password
 
-    _db := db.FirstOrInit(m, User{
-        No:        m.No,
-    })
+    if m.No != "" {
+         db = db.FirstOrInit(m, User{
+            No: m.No,
+        })
+    }
 
     if originPassword != nil {
         hash := encrypt.Bcrypt(*originPassword)
         m.Password = &hash
     }
 
-    _db.Save(m)
+    db.Save(m)
 }
 
 func (m *User) Check() bool{

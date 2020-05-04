@@ -2,6 +2,7 @@ CREATE TABLE `products`
 (
     `id`         BIGINT(20)   NOT NULL AUTO_INCREMENT,
     `no`         VARCHAR(30)  NOT NULL,
+    `user_id`    BIGINT(20) NOT NULL,
     `name`       VARCHAR(100) NOT NULL,
     `qty`        INT       DEFAULT 0,
     `list_price` FLOAT        NULL,

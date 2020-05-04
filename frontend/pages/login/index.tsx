@@ -7,6 +7,7 @@ import { useMutation } from '@apollo/react-hooks'
 import { StyledWrapper } from '@styled/login'
 import Input from '@components/Input'
 import Button from '@components/Button'
+import PageTitle from '@components/PageTitle'
 
 import { MUTATION_LOGIN } from '@graphql/user'
 
@@ -60,7 +61,7 @@ const Page = () => {
 
     return (
         <StyledWrapper>
-            <div className="title">會員登入</div>
+            <PageTitle>會員登入</PageTitle>
             <div className="loginWrap">
                 <div className="emailLogin">
                     <div className="item">
