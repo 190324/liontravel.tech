@@ -7,9 +7,7 @@ import (
 	"context"
 	"reflect"
 	"unsafe"
-
 	models_gen "liontravel.tech/build/gqlgen/models"
-	"liontravel.tech/internal/app/middlewares"
 	"liontravel.tech/internal/app/models"
 	"liontravel.tech/internal/pkg/status"
 )
@@ -20,12 +18,14 @@ func (r *mutationResolver) Product(ctx context.Context, input models_gen.IProduc
 	if no != nil {
 		oProduct.FindByNo(*no)
 
-		if oProduct.UserID != middlewares.GetUser(ctx).ID {
-			return &models_gen.RProduct{
-				Code: status.BadRequest,
-				Msg:  "",
-				Data: nil,
-			}, nil
+		if IsLogin(ctx) {
+			if oProduct.UserID != GetUser(ctx).ID {
+				return &models_gen.RProduct{
+					Code: status.BadRequest,
+					Msg:  "",
+					Data: nil,
+				}, nil
+			}
 		}
 	}
 
@@ -35,12 +35,12 @@ func (r *mutationResolver) Product(ctx context.Context, input models_gen.IProduc
 	oProduct.Qty = input.Qty
 	oProduct.Brief = input.Brief
 	oProduct.Desp = input.Desp
-
+	//oProduct.UserID = GetUser(ctx).ID
 	oProduct.Save()
 
 	return &models_gen.RProduct{
 		Code: status.Success,
-		Msg:  "",
+		Msg:  "123",
 		Data: oProduct,
 	}, nil
 }

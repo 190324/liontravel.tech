@@ -4,6 +4,7 @@ import { StyledWrapper } from './styled'
 const Component = (props) => {
     return (
         <StyledWrapper
+            type="button"
             bg={props.bg}
             color={props.color}
             display={props.display}

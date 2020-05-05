@@ -40,11 +40,13 @@ func (m *Product) FindByNo(no string) error{
 func (m *Product) Save() {
 	db, _ := config.NewDB()
 
-	_db := db.FirstOrInit(m, Product{
-		No: m.No,
-	})
+	if m.No != "" {
+		db = db.FirstOrInit(m, Product{
+			No: m.No,
+		})
+	}
 
-	_db.Save(m)
+	db.Save(m)
 }
 
 func (m *Product) Find(where []Where) (*gorm.DB, interface{},  error) {
