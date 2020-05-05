@@ -7,6 +7,7 @@ import (
 	"context"
 	"reflect"
 	"unsafe"
+
 	models_gen "liontravel.tech/build/gqlgen/models"
 	"liontravel.tech/internal/app/models"
 	"liontravel.tech/internal/pkg/status"
@@ -35,12 +36,12 @@ func (r *mutationResolver) Product(ctx context.Context, input models_gen.IProduc
 	oProduct.Qty = input.Qty
 	oProduct.Brief = input.Brief
 	oProduct.Desp = input.Desp
-	//oProduct.UserID = GetUser(ctx).ID
+	oProduct.UserID = GetUser(ctx).ID
 	oProduct.Save()
 
 	return &models_gen.RProduct{
 		Code: status.Success,
-		Msg:  "123",
+		Msg:  "12345",
 		Data: oProduct,
 	}, nil
 }
@@ -55,7 +56,7 @@ func (r *queryResolver) Product(ctx context.Context, no string) (*models_gen.RPr
 	}
 
 	return &models_gen.RProduct{
-		Code: 200,
+		Code: status.Success,
 		Msg:  "success",
 		Data: oProduct,
 	}, nil
@@ -77,7 +78,7 @@ func (r *queryResolver) Products(ctx context.Context, filter *models_gen.IProduc
 	data := *(*[]*models.Product)(unsafe.Pointer(ptr))
 
 	return &models_gen.RProducts{
-		Code: 200,
+		Code: status.Success,
 		Msg:  "Success",
 		Data: &models_gen.ProductsPagination{
 			PageInfo: pageInfo,

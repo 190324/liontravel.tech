@@ -5,6 +5,7 @@ package resolvers
 
 import (
 	"context"
+
 	models_gen "liontravel.tech/build/gqlgen/models"
 	"liontravel.tech/internal/app/middlewares"
 	"liontravel.tech/internal/app/models"

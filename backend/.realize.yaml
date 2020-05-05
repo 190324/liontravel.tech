@@ -30,3 +30,30 @@ schema:
           - config
           - database
           - cmd
+  - name: windows
+    path: .
+    commands:
+      install:
+        method: go build -o tmp/server.out cmd/server.go
+        status: true
+      run:
+        method: tmp/server.out
+        status: true
+    watcher:
+      extensions:
+        - go
+      paths:
+        - /
+      scripts:
+        - type: before
+          command: tskill windows
+          output: true
+      ignore:
+        paths:
+          - .git
+          - .realize
+          - vendor
+          - schema
+          - config
+          - database
+          - cmd

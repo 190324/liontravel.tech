@@ -3,15 +3,15 @@ package middlewares
 import (
 	"context"
 	"liontravel.tech/internal/app/models"
+	status2 "liontravel.tech/internal/pkg/status"
 	"net/http"
 	"strings"
 )
 
-var authStatusKey = &contextKey{"status"}
-var userCtxKey = &contextKey{"user"}
 type contextKey struct {
 	name string
 }
+var ctxKey = &contextKey{"ctxKey"}
 
 
 func TokenFromHeader(r *http.Request) string {
@@ -44,14 +44,19 @@ func Auth() func(http.Handler) http.Handler {
 			}
 
 			oUser.FindByNo(claims.No)
+			ctxValue := map[string]interface{}{
+				"user": oUser,
+				"status": status,
+			}
 
 			// put it in context
-			ctx := context.WithValue(r.Context(), userCtxKey, oUser)
-			ctxStatus := context.WithValue(r.Context(), authStatusKey, status)
+			ctx := context.WithValue(r.Context(), ctxKey, ctxValue)
+			//ctxStatus := context.WithValue(r.Context(), authStatusKey, status)
+
 
 			// and call the next with our new context
 			r = r.WithContext(ctx)
-			r = r.WithContext(ctxStatus)
+			//r = r.WithContext(ctxStatus)
 
 
 			next.ServeHTTP(w, r)
@@ -61,11 +66,25 @@ func Auth() func(http.Handler) http.Handler {
 
 // ForContext finds the user from the context. REQUIRES Middleware to have run.
 func GetUser(ctx context.Context) *models.User {
-	raw, _ := ctx.Value(userCtxKey).(*models.User)
-	return raw
+	raw := ctx.Value(ctxKey)
+	rawConvert, isValid := raw.(map[string]interface{})
+	var oUser *models.User
+
+	if isValid {
+		oUser = rawConvert["user"].(*models.User)
+	}
+
+	return oUser
 }
 
 func GetAuthStatus(ctx context.Context) int {
-	raw, _ := ctx.Value(authStatusKey).(int)
-	return raw
+	raw := ctx.Value(ctxKey)
+	rawConvert, isValid := raw.(map[string]interface{})
+	status := status2.Unauthorized
+
+	if isValid {
+		status = rawConvert["status"].(int)
+	}
+
+	return status
 }
