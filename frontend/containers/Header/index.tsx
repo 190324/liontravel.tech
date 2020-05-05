@@ -69,10 +69,14 @@ const Container = () => {
                                     <Bell color="#FFF" fontSize="20px" />
                                 </div>
                                 <div className="item">
-                                    <Avator
-                                        size="30"
-                                        src="//via.placeholder.com/30"
-                                    />
+                                    <Link href="/member">
+                                        <a>
+                                            <Avator
+                                                size="30"
+                                                src="//via.placeholder.com/30"
+                                            />
+                                        </a>
+                                    </Link>
                                 </div>
                                 <div className="item login">
                                     <Link href="/logout">

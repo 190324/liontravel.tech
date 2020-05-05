@@ -1,11 +1,11 @@
 import * as React from 'react'
 import { withApollo } from '@lib/withApollo'
+import { withAuth } from '@lib/withAuth'
 import { StyledWrapper } from '@styled/sell/product/mutation'
 import { useMutation } from '@apollo/react-hooks'
 import MemberSubLayout from '@containers/MemberSubLayout'
 import Input from '@components/Input'
 import Button from '@components/Button'
-import PageTitle from '@components/PageTitle'
 
 import { MUTATION_PRODUCT } from '@graphql/product'
 
@@ -29,13 +29,16 @@ const Page = () => {
             },
         })
 
-        console.log(result)
+        result.then((rs) => {
+            if (rs.data.product.code == 200) {
+                alert('新增成功')
+            }
+        })
     }
 
     return (
-        <MemberSubLayout>
+        <MemberSubLayout title="新增商品">
             <StyledWrapper>
-                <PageTitle>新增商品</PageTitle>
                 <form onSubmit={() => false}>
                     <div className="item">
                         <Input
@@ -90,4 +93,4 @@ const Page = () => {
     )
 }
 
-export default withApollo(Page)
+export default withApollo(withAuth(Page), { ssr: false })

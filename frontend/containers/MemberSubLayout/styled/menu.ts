@@ -9,5 +9,14 @@ export const StyledULContainer = styled.ul`
     }
     .subItems {
         padding-left: 16px;
+        li {
+            padding: 4px 0;
+            &:last-child {
+                padding: 4px 0 10px 0;
+            }
+            a {
+                text-decoration: none;
+            }
+        }
     }
 `

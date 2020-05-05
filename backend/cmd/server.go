@@ -34,7 +34,6 @@ func main() {
 	router := chi.NewRouter()
 
 	corsList := viper.GetStringSlice("cors")
-	log.Printf("%v", corsList)
 	cors := cors.New(cors.Options{
 		AllowedOrigins: corsList, // Use this to allow specific origin hosts
 		//AllowedOrigins:   []string{"*"},

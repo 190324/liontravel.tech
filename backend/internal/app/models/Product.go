@@ -5,6 +5,7 @@ import (
 	"github.com/jinzhu/gorm"
 	"liontravel.tech/config"
 	"log"
+	"strconv"
 	"time"
 )
 
@@ -24,6 +25,16 @@ type Product struct {
 }
 
 type Products []*Product
+
+func (m *Product) BeforeCreate() (err error) {
+	t := time.Now()
+	year, _ := strconv.Atoi(t.Format("2006"))
+	diffYear := year - 1911
+	middle := fmt.Sprintf("%v%v",diffYear, t.Format("0102"))
+	m.No = GenerateNo("PD", middle, 7)
+
+	return
+}
 
 func (m *Product) FindByNo(no string) error{
 	db, _ := config.NewDB()

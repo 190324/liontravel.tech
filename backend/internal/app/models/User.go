@@ -1,12 +1,14 @@
 package models
 
 import (
+    "fmt"
     "github.com/dgrijalva/jwt-go"
     "github.com/spf13/viper"
     "liontravel.tech/config"
     "liontravel.tech/internal/pkg/encrypt"
     _ "liontravel.tech/internal/pkg/env"
     "log"
+    "strconv"
     "time"
 )
 
@@ -32,6 +34,16 @@ type UserClaims struct {
     No string `json:"no"`
     Name *string `json:"name"`
     jwt.StandardClaims
+}
+
+func (m *User) BeforeCreate() (err error) {
+    t := time.Now()
+    year, _ := strconv.Atoi(t.Format("2006"))
+    diffYear := year - 1911
+    middle := fmt.Sprintf("%v%v",diffYear, t.Format("0102"))
+    m.No = GenerateNo("U", middle, 5)
+
+    return
 }
 
 func (m *User) FindByNo(no string) error{
