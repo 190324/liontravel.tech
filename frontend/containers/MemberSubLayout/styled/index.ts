@@ -6,7 +6,9 @@ export const StyledContainer = styled.div`
     margin: 0 auto;
     display: flex;
     .memberContent {
+        width: calc(100% - 120px);
         padding: 0 30px;
+        box-sizing: border-box;
         .title {
             padding: 20px 0;
         }

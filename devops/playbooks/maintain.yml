@@ -66,6 +66,7 @@
     - name: git pull github
       shell: |
         cd {{ projectPath }}
+        git stash
         git pull origin master
       args:
         executable: /bin/bash

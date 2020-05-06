@@ -2,8 +2,8 @@ import styled from 'styled-components'
 
 export const StyledULContainer = styled.ul`
     margin: 0;
-    padding: 0;
     padding: 16px;
+    box-sizing: border-box;
     li {
         list-style: none;
     }
