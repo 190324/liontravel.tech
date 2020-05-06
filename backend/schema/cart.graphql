@@ -1,9 +1,12 @@
 extend type Query  {
-    carts(next: Int = 0): R_Carts!
+    carts(next: Int = 0,
+        page: Int = 1
+        per_page: Int = 25
+    ): R_Carts!
 }
 
 extend type Mutation {
-    cart(product_id: Int!): R_Basic!
+    cart(no: String!, next: Int = 0): R_Basic!
 }
 
 type Cart {
