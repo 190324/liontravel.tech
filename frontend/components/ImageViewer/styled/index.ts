@@ -18,6 +18,7 @@ export const StyledWrapper = styled.div<any>`
     overflow: hidden;
     .viewer {
         font-size: 0;
+        width: 100%;
         max-width: 512px;
     }
     .imagesWrap {
@@ -30,20 +31,26 @@ export const StyledWrapper = styled.div<any>`
             ${StyledSwitchArrow}
             right: -1px;
         }
-        ul {
-            margin: 0;
-            padding: 0;
-            display: flex;
-            flex-wrap: unwrap;
-            overflow: hidden;
-            padding: 6px;
-            margin: 0 -3px;
-            li {
-                cursor: pointer;
-                list-style: none;
-                font-size: 0;
-                padding: 0 5px;
-            }
+    }
+`
+
+export const StyledUlWrapper = styled.ul<any>`
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: unwrap;
+    padding: 6px;
+    margin: 0 -3px;
+    overflow: hidden;
+    li {
+        cursor: pointer;
+        width: 120px;
+        height: 120px;
+        list-style: none;
+        font-size: 0;
+        padding: 0 5px;
+        img {
+            width: inherit;
         }
     }
 `

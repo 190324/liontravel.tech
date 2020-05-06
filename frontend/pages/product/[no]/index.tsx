@@ -24,7 +24,15 @@ const Page = () => {
             <div className="content">
                 <div className="intro">
                     <div className="images">
-                        <ImageViewer />
+                        <ImageViewer
+                            images={[
+                                '//via.placeholder.com/120x120',
+                                '//via.placeholder.com/120x120',
+                                '//via.placeholder.com/120x120',
+                                '//via.placeholder.com/120x120',
+                                '//via.placeholder.com/120x120',
+                            ]}
+                        />
                     </div>
                     <div className="basic">
                         <h1>
