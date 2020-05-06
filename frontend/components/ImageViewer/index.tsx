@@ -59,6 +59,9 @@ const Component: React.FC<Props> = (props) => {
                             </li>
                         )
                     })}
+                    {[...Array(addCount)].map((x, i) => (
+                        <li key={i} />
+                    ))}
                 </StyledUlWrapper>
                 <div className="ctlNext" onClick={clickNext}>
                     ▶

@@ -1,9 +1,14 @@
 import * as React from 'react'
+import { withApollo } from '@lib/withApollo'
+import { useQuery } from '@apollo/react-hooks'
+import { useRouter } from 'next/router'
 import { StyledWrapper } from '@styled/product/show'
 import Breadcrumb from '@components/Breadcrumb'
 import ImageViewer from '@components/ImageViewer'
 import Button from '@components/Button'
 import Quantity from '@components/Quantity'
+
+import { QUERY_PRODUCT } from '@graphql/product'
 
 const breadcrumbItems = [
     {
@@ -18,6 +23,11 @@ const breadcrumbItems = [
 ]
 
 const Page = () => {
+    const router = useRouter()
+    const { loading, error, data } = useQuery(QUERY_PRODUCT, {
+        variables: { no: router.query.no },
+    })
+
     return (
         <StyledWrapper>
             <Breadcrumb items={breadcrumbItems} seperate="\" />
@@ -27,18 +37,15 @@ const Page = () => {
                         <ImageViewer
                             images={[
                                 '//via.placeholder.com/120x120',
-                                '//via.placeholder.com/120x120',
-                                '//via.placeholder.com/120x120',
-                                '//via.placeholder.com/120x120',
-                                '//via.placeholder.com/120x120',
+                                '//via.placeholder.com/120x121',
+                                '//via.placeholder.com/120x122',
+                                '//via.placeholder.com/120x123',
+                                '//via.placeholder.com/120x124',
                             ]}
                         />
                     </div>
                     <div className="basic">
-                        <h1>
-                            【Nintendo
-                            任天堂】Switch新版藍紅主機+《曠野之息》+《精選遊戲x4》+《皮套》
-                        </h1>
+                        <h1>{data?.product?.data?.name}</h1>
                         <div className="brief">
                             新規格 電池續航增加 全球媒體一致讚譽獲獎無數巔峰作
                             <br />
@@ -52,7 +59,9 @@ const Page = () => {
                         <div className="price">
                             NT{' '}
                             <span className="primaryColor">
-                                <b>9,780</b>
+                                <b>
+                                    {data?.product?.data?.sale_price.toLocaleString()}
+                                </b>
                             </span>
                         </div>
                         <div className="qty">
@@ -72,4 +81,4 @@ const Page = () => {
     )
 }
 
-export default Page
+export default withApollo(Page)

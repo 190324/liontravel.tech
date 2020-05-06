@@ -44,13 +44,16 @@ export const StyledUlWrapper = styled.ul<any>`
     overflow: hidden;
     li {
         cursor: pointer;
-        width: 120px;
+        width: 100%;
+        min-width: 120px;
         height: 120px;
         list-style: none;
         font-size: 0;
         padding: 0 5px;
         img {
             width: inherit;
+            height: auto;
+            object-fit: cover;
         }
     }
 `

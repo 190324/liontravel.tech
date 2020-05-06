@@ -18,6 +18,22 @@ export const QUERY_PRODUCTS = gql`
     }
 `
 
+export const QUERY_PRODUCT = gql`
+    query product($no: String!) {
+        product(no: $no) {
+            code
+            msg
+            data {
+                no
+                name
+                list_price
+                sale_price
+                qty
+            }
+        }
+    }
+`
+
 export const MUTATION_PRODUCT = gql`
     mutation MUTATION_PRODUCT($input: I_Product!, $no: String) {
         product(input: $input, no: $no) {
