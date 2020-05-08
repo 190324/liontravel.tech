@@ -89,7 +89,6 @@ func (r *queryResolver) Carts(ctx context.Context, next *int, page *int, perPage
 		UserID: &GetUser(ctx).ID,
 	}
 
-
 	where := models.HandleWhere(filter)
 	list, pageInfo := models.Pagination(oCart, models.PaginateSetting{
 		Page:    *page,

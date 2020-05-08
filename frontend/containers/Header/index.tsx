@@ -9,14 +9,21 @@ import Avator from '@components/Avator'
 import Cookies from 'js-cookie'
 import jwt_decode from 'jwt-decode'
 
+interface IJwt {
+    no: string
+    name: string
+    exp: number
+}
+
 const Container = () => {
     const [isLogin, setIsLogin] = React.useState(false)
     const [isOpen, setIsOpen] = React.useState(false)
 
     React.useEffect(() => {
         try {
-            const user = jwt_decode(Cookies.get('access_token'))
-            if (user) {
+            const jwt: IJwt = jwt_decode(Cookies.get('access_token'))
+            var current_time = new Date().getTime() / 1000
+            if (jwt && current_time < jwt.exp) {
                 setIsLogin(true)
             } else {
                 setIsLogin(false)

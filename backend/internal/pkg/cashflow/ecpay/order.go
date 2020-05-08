@@ -4,12 +4,12 @@ import (
 	"crypto/sha256"
 	"fmt"
 	"github.com/spf13/viper"
+	"liontravel.tech/internal/app/models"
 	_ "liontravel.tech/internal/pkg/env"
 	"net/url"
 	"reflect"
 	"sort"
 	"strings"
-	"time"
 )
 
 func UrlEncodeReplace(str string) string{
@@ -19,26 +19,38 @@ func UrlEncodeReplace(str string) string{
 	return str
 }
 
-func CreateOrder() {
+func CreateOrder(m models.Order, items models.OrderItems) PaymentStruct{
+	uri := viper.GetString("cashflow.ecpay.uri")
 	merchantID := viper.GetString("cashflow.ecpay.merchantID")
 	hashKey := viper.GetString("cashflow.ecpay.hashKey")
 	hashIV := viper.GetString("cashflow.ecpay.hashIV")
+	returnUri := viper.GetString("cashflow.ecpay.returnUri")
+	clientBackUri := viper.GetString("cashflow.ecpay.clientBackUri")
 
+	itemName := ""
+	for _, item := range items {
+		concat := ""
+		if itemName != ""{
+			concat = "#"
+		}
+		itemName = itemName + fmt.Sprintf("%v%v %v 元 X%v", concat, item.Product.Name, item.Price, item.Qty)
+	}
 
-	resultURL := "http://localhost:3000/payment/finish"
+	tradeDate := m.CreatedAt.Format("2006/01/02 15:04:05")
+
 	data := &CreateOrderStruct{
 		MerchantID:        merchantID,
-		MerchantTradeNo:   fmt.Sprintf("%v", time.Now().Unix()),
-		MerchantTradeDate: fmt.Sprintf("%v", time.Now().Format("2006/01/02 15:04:05")),
+		MerchantTradeNo:   m.No,
+		MerchantTradeDate: fmt.Sprintf("%v", tradeDate),
 		PaymentType:       "aio",
-		TotalAmount:       6666,
-		TradeDesc:         "Test Shop",
-		ItemName:          "Switch 9780 元 X2#PS4 PRO 11000 元 X1",
-		ReturnURL:         "http://localhost:8888/payment/ecpay/callback",
+		TotalAmount:       m.Total,
+		TradeDesc:         "LionTech Shop",
+		ItemName:          itemName,//"Switch 9780 元 X2#PS4 PRO 11000 元 X1",
+		ReturnURL:         returnUri,
 		ChoosePayment:     "Credit",
 		CheckMacValue:     "",
-		ClientBackURL:     &resultURL,
-		OrderResultURL:    &resultURL,
+		ClientBackURL:     &clientBackUri,
+		OrderResultURL:    &clientBackUri,
 		EncryptType:       1,
 	}
 
@@ -82,6 +94,13 @@ func CreateOrder() {
 	dataToStringEncodeReplaceByte := []byte(dataToStringEncodeReplace)
 	checkMacValue := sha256.Sum256(dataToStringEncodeReplaceByte)
 
-	fmt.Printf("%v\n, %v\n", data.MerchantTradeNo, data.MerchantTradeDate )
-	fmt.Printf("%x\n\n", string(checkMacValue[:]))
+	//fmt.Printf("%v\n, %v\n", data.MerchantTradeNo, data.MerchantTradeDate )
+	data.CheckMacValue = fmt.Sprintf("%x", string(checkMacValue[:]))
+
+	result := PaymentStruct{
+		Uri: uri,
+		Params: *data,
+	}
+
+	return result
 }

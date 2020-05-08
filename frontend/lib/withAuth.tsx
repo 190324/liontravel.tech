@@ -13,7 +13,7 @@ export const withAuth = (Component) => {
         React.useEffect(() => {
             console.log(loading, error, data)
             if (!loading && data?.me?.code != 200) {
-                // Router.push('/login')
+                Router.push('/login')
             }
             return () => {}
         }, [data])

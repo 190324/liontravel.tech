@@ -1,12 +1,17 @@
 package ecpay
 
+type PaymentStruct struct {
+	Uri string
+	Params CreateOrderStruct
+}
+
 type CreateOrderStruct struct {
 	MerchantID string
 	MerchantTradeNo string
 	StoreID *string
 	MerchantTradeDate string
 	PaymentType string
-	TotalAmount int
+	TotalAmount float64
 	TradeDesc string
 	ItemName string
 	ReturnURL string
@@ -26,7 +31,7 @@ type CreateOrderStruct struct {
 	CustomField2 *string
 	CustomField3 *string
 	CustomField4 *string
-	EncryptType int `json:"encrypt_type" default:10`
+	EncryptType int
 	Language *string
 }
 

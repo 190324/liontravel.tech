@@ -3,6 +3,10 @@ extend type Query  {
     orders: R_Orders!
 }
 
+extend type Mutation {
+    order: R_Ecpay
+}
+
 type Order {
     no: String!
     user_name: String!
@@ -13,7 +17,6 @@ type Order {
     receiver_address: String!
     discount: Float
     total: Float!
-    status: Int!
 }
 
 type R_Order {
@@ -26,6 +29,33 @@ type R_Orders {
     code: Int!
     msg: String!
     data: OrdersPagination
+}
+
+type R_Ecpay {
+    code: Int!
+    msg: String!
+    data: EcpayForm
+}
+
+type EcpayForm {
+    uri: String!
+    params: EcpayFormParams
+}
+
+type EcpayFormParams {
+    MerchantTradeNo: String!
+    MerchantTradeDate: String!
+    CheckMacValue: String!
+    MerchantID: String!
+    PaymentType: String!
+    TotalAmount: Float!
+    TradeDesc: String!
+    ItemName: String!
+    ReturnURL: String!
+    ChoosePayment: String!
+    ClientBackURL: String!
+    OrderResultURL: String!
+    EncryptType: Int!
 }
 
 type OrdersPagination {

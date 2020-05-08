@@ -1,6 +1,6 @@
 CREATE TABLE `order_items` (
     `id` BIGINT(20) NOT NULL AUTO_INCREMENT,
-    `user_id` BIGINT(20) NOT NULL,
+    `order_id` BIGINT(20) NOT NULL,
     `product_id` BIGINT(20) NOT NULL,
     `qty` INT NOT NULL,
     `discount` FLOAT DEFAULT 0,

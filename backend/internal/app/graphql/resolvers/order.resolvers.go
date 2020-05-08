@@ -6,50 +6,92 @@ package resolvers
 import (
 	"context"
 	"fmt"
+	"reflect"
+	"unsafe"
 
-	generated "liontravel.tech/build/gqlgen"
 	models_gen "liontravel.tech/build/gqlgen/models"
 	"liontravel.tech/internal/app/models"
+	"liontravel.tech/internal/pkg/cashflow/ecpay"
+	"liontravel.tech/internal/pkg/status"
 )
 
-func (r *orderResolver) No(ctx context.Context, obj *models.Order) (string, error) {
-	panic(fmt.Errorf("not implemented"))
-}
+func (r *mutationResolver) Order(ctx context.Context) (*models_gen.REcpay, error) {
+	oOrder := models.Order{}
+	oOrder.UserID = GetUser(ctx).ID
+	oOrder.UserName = GetUser(ctx).Name
+	oOrder.UserPhone = "1234567890"
+	oOrder.UserAddress = ""
+	oOrder.ReceiverName = ""
+	oOrder.ReceiverPhone = ""
+	oOrder.ReceiverAddress = ""
+	oOrder.Discount = 0
+	oOrder.Total = 0
+	oOrder.PaymentType = 0
+	oOrder.PaymentVendor = 0
+	oOrder.Save()
 
-func (r *orderResolver) UserName(ctx context.Context, obj *models.Order) (string, error) {
-	panic(fmt.Errorf("not implemented"))
-}
+	// 購物車結算
+	oCart := &models.Cart{}
+	filter := &models.ICartsFilter{
+		UserID: &GetUser(ctx).ID,
+	}
+	where := models.HandleWhere(filter)
+	query, oCarts, _ := oCart.Find(where)
+	query.Find(oCarts)
 
-func (r *orderResolver) UserPhone(ctx context.Context, obj *models.Order) (string, error) {
-	panic(fmt.Errorf("not implemented"))
-}
+	re := oCarts.(*models.Carts)
+	rv := reflect.ValueOf(re)
+	ptr := rv.Pointer()
+	carts := *(*[]*models.Cart)(unsafe.Pointer(ptr))
 
-func (r *orderResolver) UserAddress(ctx context.Context, obj *models.Order) (string, error) {
-	panic(fmt.Errorf("not implemented"))
-}
+	var total float64 = 0
+	for _, item := range carts {
+		oOrderItem := &models.OrderItem{}
+		oProduct := &models.Product{}
+		oProduct.FindByID(item.ProductID)
 
-func (r *orderResolver) ReceiverName(ctx context.Context, obj *models.Order) (string, error) {
-	panic(fmt.Errorf("not implemented"))
-}
+		if oProduct.ID > 0 {
+			oOrderItem.OrderID = oOrder.ID
+			oOrderItem.ProductID = oProduct.ID
+			oOrderItem.Qty = item.Qty
+			oOrderItem.Price = oProduct.SalePrice
+			oOrderItem.Save()
 
-func (r *orderResolver) ReceiverPhone(ctx context.Context, obj *models.Order) (string, error) {
-	panic(fmt.Errorf("not implemented"))
-}
+			total = total + float64(oOrderItem.Qty)*oOrderItem.Price
+		}
+	}
 
-func (r *orderResolver) ReceiverAddress(ctx context.Context, obj *models.Order) (string, error) {
-	panic(fmt.Errorf("not implemented"))
-}
+	// 寫入總額
+	oOrder.Total = total
+	oOrder.Save()
 
-func (r *orderResolver) Discount(ctx context.Context, obj *models.Order) (*float64, error) {
-	panic(fmt.Errorf("not implemented"))
-}
+	oOrderItems := &models.OrderItems{}
+	oOrderItems.FindAllByOrderID(oOrder.ID)
 
-func (r *orderResolver) Total(ctx context.Context, obj *models.Order) (float64, error) {
-	panic(fmt.Errorf("not implemented"))
-}
+	result := ecpay.CreateOrder(oOrder, *oOrderItems)
 
-func (r *orderResolver) Status(ctx context.Context, obj *models.Order) (int, error) {
-	panic(fmt.Errorf("not implemented"))
+	return &models_gen.REcpay{
+		Code: status.Success,
+		Msg:  "",
+		Data: &models.EcpayForm{
+			Uri: result.Uri,
+			Params: models.EcpayFormParams{
+				MerchantTradeNo:   result.Params.MerchantTradeNo,
+				MerchantTradeDate: result.Params.MerchantTradeDate,
+				CheckMacValue:     result.Params.CheckMacValue,
+				MerchantID:        result.Params.MerchantID,
+				PaymentType:       result.Params.PaymentType,
+				TotalAmount:       result.Params.TotalAmount,
+				TradeDesc:         result.Params.TradeDesc,
+				ItemName:          result.Params.ItemName,
+				ReturnURL:         result.Params.ReturnURL,
+				ChoosePayment:     result.Params.ChoosePayment,
+				ClientBackURL:     *result.Params.ClientBackURL,
+				OrderResultURL:    *result.Params.OrderResultURL,
+				EncryptType:       result.Params.EncryptType,
+			},
+		},
+	}, nil
 }
 
 func (r *queryResolver) Order(ctx context.Context) (*models_gen.ROrder, error) {
@@ -59,8 +101,3 @@ func (r *queryResolver) Order(ctx context.Context) (*models_gen.ROrder, error) {
 func (r *queryResolver) Orders(ctx context.Context) (*models_gen.ROrders, error) {
 	panic(fmt.Errorf("not implemented"))
 }
-
-// Order returns generated.OrderResolver implementation.
-func (r *Resolver) Order() generated.OrderResolver { return &orderResolver{r} }
-
-type orderResolver struct{ *Resolver }
