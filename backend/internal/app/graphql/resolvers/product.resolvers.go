@@ -5,6 +5,7 @@ package resolvers
 
 import (
 	"context"
+	"log"
 	"reflect"
 	"unsafe"
 
@@ -65,6 +66,7 @@ func (r *queryResolver) Product(ctx context.Context, no string) (*models_gen.RPr
 func (r *queryResolver) Products(ctx context.Context, filter *models_gen.IProductFilter, page *int, perPage *int) (*models_gen.RProducts, error) {
 	oProduct := &models.Product{}
 
+	log.Printf("%T", filter)
 	where := models.HandleWhere(filter)
 	list, pageInfo := models.Pagination(oProduct, models.PaginateSetting{
 		Page:    *page,

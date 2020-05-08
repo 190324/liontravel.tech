@@ -5,7 +5,6 @@ package resolvers
 
 import (
 	"context"
-	"fmt"
 	"reflect"
 	"unsafe"
 
@@ -16,14 +15,22 @@ import (
 )
 
 func (r *cartResolver) Product(ctx context.Context, obj *models.Cart) (*models.Product, error) {
-	panic(fmt.Errorf("not implemented"))
+	oProduct := &models.Product{}
+
+	oProduct.FindByID(obj.ProductID)
+
+	if oProduct.ID <= 0 {
+		return nil, nil
+	}
+
+	return oProduct, nil
 }
 
-func (r *mutationResolver) Cart(ctx context.Context, no string, next *int) (*models_gen.RBasic, error) {
+func (r *mutationResolver) Cart(ctx context.Context, productNo string, qty int) (*models_gen.RBasic, error) {
 	oCart := &models.Cart{}
 	oProduct := &models.Product{}
 
-	oProduct.FindByNo(no)
+	oProduct.FindByNo(productNo)
 
 	if oProduct.ID <= 0 {
 		return &models_gen.RBasic{
@@ -32,9 +39,8 @@ func (r *mutationResolver) Cart(ctx context.Context, no string, next *int) (*mod
 		}, nil
 	}
 
-	oCart.UserID = GetUser(ctx).ID
-	oCart.ProductID = oProduct.ID
-	oCart.Next = *next
+	oCart.FindByPIDnUID(oProduct.ID, GetUser(ctx).ID)
+	oCart.Qty = qty
 	oCart.Save()
 
 	return &models_gen.RBasic{
@@ -43,12 +49,46 @@ func (r *mutationResolver) Cart(ctx context.Context, no string, next *int) (*mod
 	}, nil
 }
 
+func (r *mutationResolver) NextBuy(ctx context.Context, no string, next int) (*models_gen.RBasic, error) {
+	oCart := &models.Cart{}
+
+	oCart.FindByNo(no)
+	oCart.Next = next
+	oCart.Save()
+
+	return &models_gen.RBasic{
+		Code: status.Success,
+		Msg:  "",
+	}, nil
+}
+
+func (r *mutationResolver) DelCart(ctx context.Context, no string) (*models_gen.RBasic, error) {
+	oCart := &models.Cart{}
+
+	oCart.FindByNo(no)
+
+	if oCart.UserID != GetUser(ctx).ID {
+		return &models_gen.RBasic{
+			Code: status.BadRequest,
+			Msg:  "",
+		}, nil
+	}
+
+	oCart.Delete()
+
+	return &models_gen.RBasic{
+		Code: status.Success,
+		Msg:  "",
+	}, nil
+}
+
 func (r *queryResolver) Carts(ctx context.Context, next *int, page *int, perPage *int) (*models_gen.RCarts, error) {
 	oCart := &models.Cart{}
 
-	filter := map[string]interface{}{
-		"user_id": GetUser(ctx).ID,
+	filter := &models.ICartsFilter{
+		UserID: &GetUser(ctx).ID,
 	}
+
 
 	where := models.HandleWhere(filter)
 	list, pageInfo := models.Pagination(oCart, models.PaginateSetting{
@@ -57,7 +97,7 @@ func (r *queryResolver) Carts(ctx context.Context, next *int, page *int, perPage
 		Where:   where,
 	})
 
-	re := list.(*models.Products)
+	re := list.(*models.Carts)
 	rv := reflect.ValueOf(re)
 	ptr := rv.Pointer()
 	data := *(*[]*models.Cart)(unsafe.Pointer(ptr))

@@ -1,6 +1,5 @@
 import * as React from 'react'
 import { withApollo } from '@lib/withApollo'
-import { withAuth } from '@lib/withAuth'
 import { StyledWrapper } from '@styled/sell/product/mutation'
 import { useMutation } from '@apollo/react-hooks'
 import MemberSubLayout from '@containers/MemberSubLayout'

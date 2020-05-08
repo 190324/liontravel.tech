@@ -26,6 +26,7 @@ export const QUERY_PRODUCT = gql`
             data {
                 no
                 name
+                brief
                 list_price
                 sale_price
                 qty

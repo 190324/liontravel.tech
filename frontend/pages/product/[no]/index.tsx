@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { withApollo } from '@lib/withApollo'
 import { useQuery } from '@apollo/react-hooks'
+import { useMutation } from '@apollo/react-hooks'
 import { useRouter } from 'next/router'
 import { StyledWrapper } from '@styled/product/show'
 import Breadcrumb from '@components/Breadcrumb'
@@ -9,6 +10,9 @@ import Button from '@components/Button'
 import Quantity from '@components/Quantity'
 
 import { QUERY_PRODUCT } from '@graphql/product'
+import { MUTATION_CART } from '@graphql/cart'
+
+const { Fragment } = React
 
 const breadcrumbItems = [
     {
@@ -27,6 +31,17 @@ const Page = () => {
     const { loading, error, data } = useQuery(QUERY_PRODUCT, {
         variables: { no: router.query.no },
     })
+    const [mutationCart] = useMutation(MUTATION_CART)
+
+    const clickAddCart = () => {
+        console.log('clik')
+        mutationCart({
+            variables: {
+                product_no: data?.product?.data?.no,
+                qty: 12,
+            },
+        })
+    }
 
     return (
         <StyledWrapper>
@@ -46,16 +61,12 @@ const Page = () => {
                     </div>
                     <div className="basic">
                         <h1>{data?.product?.data?.name}</h1>
-                        <div className="brief">
-                            新規格 電池續航增加 全球媒體一致讚譽獲獎無數巔峰作
-                            <br />
-                            完整收錄8代所有內容及全新模式
-                            <br />
-                            快投擲愛心將敵人變成同伴 廢棄鬼屋洋樓
-                            <br />
-                            掃蕩幽靈解救伙伴 中文版
-                            <br />
-                        </div>
+                        <div
+                            className="brief"
+                            dangerouslySetInnerHTML={{
+                                __html: data?.product?.data?.brief,
+                            }}
+                        />
                         <div className="price">
                             NT{' '}
                             <span className="primaryColor">
@@ -68,8 +79,14 @@ const Page = () => {
                             <Quantity />
                         </div>
                         <div>
-                            <Button bg="secondary">加入購物車</Button>{' '}
-                            <Button bg="primary" color="white">
+                            <Button bg="secondary" onClick={clickAddCart}>
+                                加入購物車
+                            </Button>{' '}
+                            <Button
+                                bg="primary"
+                                color="white"
+                                onClick={clickAddCart}
+                            >
                                 立即結帳
                             </Button>
                         </div>

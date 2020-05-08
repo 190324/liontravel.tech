@@ -79,47 +79,47 @@ func HandleWhere(w interface{}) (where []Where){
 
 		for i := 0; i < s.NumField(); i++ {
 			f := s.Field(i)
-			//log.Printf("%d: %s %s = %v\n", i, typeOfT.Field(i).Name, f.Type(), f.Interface())
+			//log.Printf("hello=>%d: %s %s = %v\n", i, typeOfT.Field(i).Name, f.Type(), f.Interface())
 
-			if s.FieldByName(typeOfT.Field(i).Name).Elem().IsValid() {
+			// 字串轉換 比如 UserID => user_id
+			key := strcase.ToSnake(typeOfT.Field(i).Name)
 
-				// 字串轉換 比如 UserID => user_id
-				key := strcase.ToSnake(typeOfT.Field(i).Name)
-
-				switch f.Type().String() {
-				case "string":
+			switch f.Type().String() {
+			case "string":
+				where = append(where, Where{
+					Column:   key,
+					Value: s.FieldByName(typeOfT.Field(i).Name),
+				},
+				)
+			case "*string":
+				if s.FieldByName(typeOfT.Field(i).Name).Elem().IsValid() {
 					where = append(where, Where{
-						Column:   key,
-						Value: s.FieldByName(typeOfT.Field(i).Name),
-					},
-					)
-				case "*string":
-					where = append(where, Where{
-						Column:   key,
-						Value: s.FieldByName(typeOfT.Field(i).Name).Elem().String(),
-					},
-					)
-				case "int":
-					where = append(where, Where{
-						Column:   key,
-						Value: s.FieldByName(typeOfT.Field(i).Name),
-					},
-					)
-				case "*int":
-					where = append(where, Where{
-						Column:   key,
-						Value: s.FieldByName(typeOfT.Field(i).Name).Elem().Int(),
-					},
-					)
-				default:
-					where = append(where, Where{
-						Column:   key,
-						Value: s.FieldByName(typeOfT.Field(i).Name).Interface(),
+						Column: key,
+						Value:  s.FieldByName(typeOfT.Field(i).Name).Elem().String(),
 					},
 					)
 				}
+			case "int":
+				where = append(where, Where{
+					Column:   key,
+					Value: s.FieldByName(typeOfT.Field(i).Name),
+				},
+				)
+			case "*int":
+				if s.FieldByName(typeOfT.Field(i).Name).Elem().IsValid() {
+					where = append(where, Where{
+						Column: key,
+						Value:  s.FieldByName(typeOfT.Field(i).Name).Elem().Int(),
+					},
+					)
+				}
+			default:
+				where = append(where, Where{
+					Column:   key,
+					Value: s.FieldByName(typeOfT.Field(i).Name).Interface(),
+				},
+				)
 			}
-
 		}
 	}
 

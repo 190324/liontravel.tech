@@ -6,12 +6,15 @@ extend type Query  {
 }
 
 extend type Mutation {
-    cart(no: String!, next: Int = 0): R_Basic!
+    cart(product_no: String!, qty: Int!): R_Basic!
+    nextBuy(no: String!, next: Int!): R_Basic!
+    delCart(no: String!): R_Basic!
 }
 
 type Cart {
+    no: String!
+    qty: Int
     product: Product!
-    next: Int!
 }
 
 type R_Carts {

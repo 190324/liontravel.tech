@@ -149,6 +149,9 @@ function createApolloClient(initialState = {}) {
 
         // return the headers to the context so httpLink can read them
         return {
+            fetchOptions: {
+                credentials: 'include',
+            },
             headers: {
                 ...headers,
                 Authorization: authorization,
