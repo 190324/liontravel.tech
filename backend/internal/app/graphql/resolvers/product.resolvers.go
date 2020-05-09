@@ -12,6 +12,7 @@ import (
 	models_gen "liontravel.tech/build/gqlgen/models"
 	"liontravel.tech/internal/app/models"
 	"liontravel.tech/internal/pkg/status"
+	"liontravel.tech/internal/pkg/upload"
 )
 
 func (r *mutationResolver) Product(ctx context.Context, input models_gen.IProduct, no *string) (*models_gen.RProduct, error) {
@@ -40,9 +41,13 @@ func (r *mutationResolver) Product(ctx context.Context, input models_gen.IProduc
 	oProduct.UserID = GetUser(ctx).ID
 	oProduct.Save()
 
+	log.Printf("%v", input.Images.File)
+
+	upload.Upload("products/"+oProduct.No, input.Images)
+
 	return &models_gen.RProduct{
 		Code: status.Success,
-		Msg:  "12345",
+		Msg:  "",
 		Data: oProduct,
 	}, nil
 }
@@ -66,7 +71,6 @@ func (r *queryResolver) Product(ctx context.Context, no string) (*models_gen.RPr
 func (r *queryResolver) Products(ctx context.Context, filter *models_gen.IProductFilter, page *int, perPage *int) (*models_gen.RProducts, error) {
 	oProduct := &models.Product{}
 
-	log.Printf("%T", filter)
 	where := models.HandleWhere(filter)
 	list, pageInfo := models.Pagination(oProduct, models.PaginateSetting{
 		Page:    *page,

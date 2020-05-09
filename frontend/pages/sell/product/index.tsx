@@ -30,7 +30,6 @@ const Page = () => {
 
     useEffect(() => {
         if (data?.products?.code == 200) {
-            // console.log(data.products.data.edges)
             setDataSource((prev) => {
                 return [...data.products.data.edges]
             })

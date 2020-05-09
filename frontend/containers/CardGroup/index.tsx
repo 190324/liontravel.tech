@@ -23,8 +23,8 @@ const Container: React.FC<Props> = (props) => {
                 {data?.products?.data?.edges.map((row, key) => {
                     return (
                         <Card
-                            className="item"
                             key={key}
+                            className="item"
                             no={row.no}
                             title={row.name}
                             price={row.sale_price}

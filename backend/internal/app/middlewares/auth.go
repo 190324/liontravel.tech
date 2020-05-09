@@ -4,6 +4,7 @@ import (
 	"context"
 	"liontravel.tech/internal/app/models"
 	status2 "liontravel.tech/internal/pkg/status"
+	"log"
 	"net/http"
 	"strings"
 )
@@ -28,7 +29,7 @@ func Auth() func(http.Handler) http.Handler {
 	return func(next http.Handler) http.Handler {
 		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			c := TokenFromHeader(r)
-
+			log.Printf("%v %v", r.URL, r.Header)
 			// Allow unauthenticated users in
 			if c == "" {
 				next.ServeHTTP(w, r)

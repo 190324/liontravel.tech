@@ -4,15 +4,18 @@ package main
 import (
 	"context"
 	"errors"
+	"github.com/99designs/gqlgen/graphql"
 	"github.com/99designs/gqlgen/graphql/handler"
 	"github.com/99designs/gqlgen/graphql/playground"
 	"github.com/go-chi/chi"
 	"github.com/go-chi/cors"
 	"github.com/spf13/viper"
 	generated "liontravel.tech/build/gqlgen"
+	models_gen "liontravel.tech/build/gqlgen/models"
 	"liontravel.tech/internal/app/graphql/resolvers"
 	"liontravel.tech/internal/app/middlewares"
 	_ "liontravel.tech/internal/pkg/env"
+	"liontravel.tech/internal/pkg/status"
 	"log"
 	"net/http"
 	"runtime/debug"
@@ -23,6 +26,16 @@ func main() {
 	port := viper.GetString("server.port")
 
 	Config := generated.Config{Resolvers: &resolvers.Resolver{}}
+	Config.Directives.Auth = func(ctx context.Context, obj interface{}, next graphql.Resolver) (interface{}, error) {
+		if !resolvers.IsLogin(ctx) {
+			return &models_gen.RBasic{
+				Code: status.Unauthorized,
+				Msg: "",
+			}, nil
+		}
+
+		return next(ctx)
+	}
 	srv := handler.NewDefaultServer(generated.NewExecutableSchema(Config))
 	srv.SetRecoverFunc(func(ctx context.Context, err interface{}) (userMessage error) {
 		// send this panic somewhere

@@ -1,3 +1,7 @@
+scalar Upload
+
+directive @auth on FIELD_DEFINITION
+
 type Query {
     ping: String!
 }

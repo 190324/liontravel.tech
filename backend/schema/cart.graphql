@@ -2,13 +2,13 @@ extend type Query  {
     carts(next: Int = 0,
         page: Int = 1
         per_page: Int = 25
-    ): R_Carts!
+    ): R_Carts! @auth
 }
 
 extend type Mutation {
-    cart(product_no: String!, qty: Int!): R_Basic!
-    nextBuy(no: String!, next: Int!): R_Basic!
-    delCart(no: String!): R_Basic!
+    cart(product_no: String!, qty: Int!): R_Basic! @auth
+    nextBuy(no: String!, next: Int!): R_Basic! @auth
+    delCart(no: String!): R_Basic! @auth
 }
 
 type Cart {

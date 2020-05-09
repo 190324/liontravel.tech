@@ -25,7 +25,7 @@ type Cart struct {
 type Carts []*Cart
 
 type ICartsFilter struct {
-    UserID *int `json:"user_id"`
+    UserID int `json:"user_id"`
 }
 
 func (m *Cart) BeforeCreate() (err error) {
@@ -70,11 +70,11 @@ func (m *Cart) Save() {
 func (m *Cart) Find(where []Where) (*gorm.DB, interface{},  error) {
     db, _ := config.NewDB()
 
-    query := db.Where("1=1")
+    query := db
 
     for _, item := range where {
-        value := item.Value
-        query = query.Where(item.Column + " = ?", value)
+       value := item.Value
+       query = query.Where(item.Column + " = ?", fmt.Sprintf("%v", value))
     }
 
     query = query.Order("id ASC")
@@ -89,4 +89,9 @@ func (m *Cart) Find(where []Where) (*gorm.DB, interface{},  error) {
 func (m *Cart) Delete() {
     db, _ := config.NewDB()
     db.Delete(m)
+}
+
+func (m *Cart) DeleteByUserID(userID int) {
+    db, _ := config.NewDB()
+    db.Delete(&Cart{UserID: userID})
 }

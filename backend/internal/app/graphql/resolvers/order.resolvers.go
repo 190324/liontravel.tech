@@ -33,7 +33,7 @@ func (r *mutationResolver) Order(ctx context.Context) (*models_gen.REcpay, error
 	// 購物車結算
 	oCart := &models.Cart{}
 	filter := &models.ICartsFilter{
-		UserID: &GetUser(ctx).ID,
+		UserID: GetUser(ctx).ID,
 	}
 	where := models.HandleWhere(filter)
 	query, oCarts, _ := oCart.Find(where)
@@ -69,6 +69,7 @@ func (r *mutationResolver) Order(ctx context.Context) (*models_gen.REcpay, error
 	oOrderItems.FindAllByOrderID(oOrder.ID)
 
 	result := ecpay.CreateOrder(oOrder, *oOrderItems)
+	oCart.DeleteByUserID(GetUser(ctx).ID)
 
 	return &models_gen.REcpay{
 		Code: status.Success,

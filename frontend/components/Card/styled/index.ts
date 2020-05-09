@@ -3,7 +3,7 @@ import styled from 'styled-components'
 export const StyledWrapper = styled.div<any>`
     background: ${(props) => props.theme.colors.info};
     display: inline-block;
-    width: 300px;
+    width: 100%
     border-radius: 8px;
     padding: 12px;
     box-sizing: border-box;

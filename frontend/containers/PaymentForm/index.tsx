@@ -1,7 +1,11 @@
 import * as React from 'react'
 import { StyledWrapper } from './styled'
+import Loading, { LoadingType } from '@components/Loading'
+
+const { useEffect, useRef } = React
 
 interface Props {
+    ref?: React.MutableRefObject<HTMLFormElement>
     action: string
     params: IParams
 }
@@ -23,9 +27,18 @@ interface IParams {
 }
 
 const Container: React.FC<Props> = (props) => {
+    const formRef = useRef<HTMLFormElement>(null)
+
+    useEffect(() => {
+        if (formRef) {
+            formRef.current.submit()
+        }
+    }, [formRef])
+
     return (
         <StyledWrapper>
-            <form action={props.action} method="post">
+            <Loading type={LoadingType.container} />
+            <form ref={formRef} action={props.action} method="post">
                 <input
                     type="text"
                     name="MerchantTradeNo"

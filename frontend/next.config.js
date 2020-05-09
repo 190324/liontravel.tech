@@ -1,6 +1,7 @@
 const path = require('path')
 const Dotenv = require('dotenv-webpack')
 const merge = require('webpack-merge')
+const withPWA = require('next-pwa')
 
 /**
  * Resolve tsconfig.json paths to Webpack aliases
@@ -30,7 +31,11 @@ function resolveTsconfigPathsToAlias({
     return aliases
 }
 
-module.exports = {
+module.exports = withPWA({
+    pwa: {
+        dest: 'public',
+    },
+    exportTrailingSlash: true,
     webpack: (config, options) => {
         const setting = {
             module: {
@@ -61,4 +66,4 @@ module.exports = {
 
         return merge(config, setting)
     },
-}
+})

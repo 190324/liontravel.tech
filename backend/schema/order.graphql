@@ -1,10 +1,10 @@
 extend type Query  {
-    order: R_Order!
-    orders: R_Orders!
+    order: R_Order! @auth
+    orders: R_Orders! @auth
 }
 
 extend type Mutation {
-    order: R_Ecpay
+    order: R_Ecpay @auth
 }
 
 type Order {

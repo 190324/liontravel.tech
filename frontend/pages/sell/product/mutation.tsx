@@ -1,10 +1,12 @@
 import * as React from 'react'
 import { withApollo } from '@lib/withApollo'
+import { withAuth } from '@lib/withAuth'
 import { StyledWrapper } from '@styled/sell/product/mutation'
 import { useMutation } from '@apollo/react-hooks'
 import MemberSubLayout from '@containers/MemberSubLayout'
 import Input from '@components/Input'
 import Button from '@components/Button'
+import { Editor } from '@tinymce/tinymce-react'
 
 import { MUTATION_PRODUCT } from '@graphql/product'
 
@@ -17,6 +19,8 @@ const Page = () => {
         name: null,
         sale_price: null,
         qty: null,
+        images: null,
+        brief: null,
     })
 
     const clickSave = () => {
@@ -32,6 +36,13 @@ const Page = () => {
             if (rs.data.product.code == 200) {
                 alert('新增成功')
             }
+        })
+    }
+
+    const handleEditorChange = (content, editor) => {
+        console.log('Content was updated:', content)
+        setInputProduct((prev) => {
+            return { ...prev, brief: content }
         })
     }
 
@@ -76,6 +87,31 @@ const Page = () => {
                             }}
                         />
                     </div>
+                    <Editor
+                        apiKey={process.env.TINYMCE_API_KEY}
+                        init={{
+                            height: 300,
+                            menubar: false,
+                            toolbar:
+                                'undo redo | formatselect | bold italic backcolor | \
+             alignleft aligncenter alignright alignjustify | \
+             bullist numlist outdent indent | removeformat | help',
+                        }}
+                        onEditorChange={handleEditorChange}
+                    />
+                    <input
+                        type="file"
+                        onChange={({ target: { validity, files } }) =>
+                            setInputProduct((prev) => {
+                                let images = prev.images
+                                images = files[0]
+                                return {
+                                    ...prev,
+                                    images: images,
+                                }
+                            })
+                        }
+                    />
                     <div className="item">
                         <Button
                             bg="primary"

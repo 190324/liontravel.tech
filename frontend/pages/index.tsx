@@ -3,6 +3,8 @@ import { withApollo } from '@lib/withApollo'
 import { StyledWrapper } from '@styled/index'
 import CardGroup from '@containers/CardGroup'
 
+export const config = { amp: 'hybrid' }
+
 const Page = () => {
     return (
         <StyledWrapper>

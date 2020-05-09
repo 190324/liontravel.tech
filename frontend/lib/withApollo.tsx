@@ -154,6 +154,7 @@ function createApolloClient(initialState = {}) {
             },
             headers: {
                 ...headers,
+                'keep-alive': 'true',
                 Authorization: authorization,
             },
         }

@@ -1,6 +1,7 @@
 import * as React from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
+import { useAmp } from 'next/amp'
 import { StyledWrapper } from './styled'
 
 interface Props {
@@ -12,6 +13,7 @@ interface Props {
 
 const Component: React.FC<Props> = (props) => {
     const router = useRouter()
+    const isAmp = useAmp()
 
     return (
         <StyledWrapper
@@ -21,7 +23,17 @@ const Component: React.FC<Props> = (props) => {
             }}
         >
             <div className="imgWrap">
-                <img src="/static/images/switch.jpg" />
+                {isAmp ? (
+                    <amp-img
+                        src="/static/images/switch.jpg"
+                        width={'640'}
+                        height={'640'}
+                        alt={props.title}
+                        layout="responsive"
+                    />
+                ) : (
+                    <img src="/static/images/switch.jpg" alt={props.title} />
+                )}
             </div>
             <div className="title">
                 <Link href={`/product/[no]`} as={`/product/${props.no}`}>

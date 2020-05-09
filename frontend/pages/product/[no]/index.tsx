@@ -2,7 +2,7 @@ import * as React from 'react'
 import { withApollo } from '@lib/withApollo'
 import { useQuery } from '@apollo/react-hooks'
 import { useMutation } from '@apollo/react-hooks'
-import { useRouter } from 'next/router'
+import Router, { useRouter } from 'next/router'
 import { StyledWrapper } from '@styled/product/show'
 import Breadcrumb from '@components/Breadcrumb'
 import ImageViewer from '@components/ImageViewer'
@@ -12,7 +12,7 @@ import Quantity from '@components/Quantity'
 import { QUERY_PRODUCT } from '@graphql/product'
 import { MUTATION_CART } from '@graphql/cart'
 
-const { Fragment } = React
+const { useState } = React
 
 const breadcrumbItems = [
     {
@@ -28,18 +28,33 @@ const breadcrumbItems = [
 
 const Page = () => {
     const router = useRouter()
+    const [qty, setQty] = useState(1)
     const { loading, error, data } = useQuery(QUERY_PRODUCT, {
         variables: { no: router.query.no },
     })
     const [mutationCart] = useMutation(MUTATION_CART)
 
-    const clickAddCart = () => {
-        console.log('clik')
-        mutationCart({
+    const clickAddCart = (isCheckout = false) => {
+        let result = mutationCart({
             variables: {
                 product_no: data?.product?.data?.no,
-                qty: 12,
+                qty: qty,
             },
+        })
+
+        result.then((rs) => {
+            switch (rs.data.cart.code) {
+                case 200:
+                    if (isCheckout) {
+                        Router.push('/cart')
+                    }
+                    break
+                case 401:
+                    alert('請登入會員')
+                    break
+                default:
+                    break
+            }
         })
     }
 
@@ -76,7 +91,12 @@ const Page = () => {
                             </span>
                         </div>
                         <div className="qty">
-                            <Quantity />
+                            <Quantity
+                                value={qty}
+                                onChange={(value) => {
+                                    setQty(value)
+                                }}
+                            />
                         </div>
                         <div>
                             <Button bg="secondary" onClick={clickAddCart}>
@@ -85,7 +105,7 @@ const Page = () => {
                             <Button
                                 bg="primary"
                                 color="white"
-                                onClick={clickAddCart}
+                                onClick={() => clickAddCart(true)}
                             >
                                 立即結帳
                             </Button>

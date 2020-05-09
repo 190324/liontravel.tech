@@ -16,9 +16,19 @@ import { QUERY_CARTS } from '@graphql/cart'
 const { Fragment, useState } = React
 
 const Page = () => {
-    const { loading, error, data } = useQuery(QUERY_CARTS)
+    const { loading, error, data } = useQuery(QUERY_CARTS, {
+        fetchPolicy: 'no-cache',
+    })
     const [mutationOrder, { data: paymentResult }] = useMutation(MUTATION_ORDER)
-    const [step, setStep] = useState(1)
+    const [stepIndex, setStepIndex] = useState(0)
+
+    const stepItems = [
+        { name: '購物車' },
+        { name: '配送資訊' },
+        { name: '確認訂單' },
+        { name: '前往結帳' },
+        { name: '完成' },
+    ]
 
     return (
         <StyledWrapper>
@@ -26,11 +36,11 @@ const Page = () => {
                 <Loading type={LoadingType.container} size={20} />
             ) : (
                 <Fragment>
-                    <Steps />
+                    <Steps items={stepItems} activeIndex={stepIndex} />
                     <div>
                         <div
                             className={`steps step1Wrap ${
-                                step == 1 ? 'active' : null
+                                stepIndex == 0 ? 'active' : null
                             }`}
                         >
                             {data?.carts?.data?.edges.map((row, key) => {
@@ -46,7 +56,7 @@ const Page = () => {
                                 color="white"
                                 display="inline"
                                 onClick={() => {
-                                    setStep(2)
+                                    setStepIndex(1)
                                 }}
                             >
                                 下一步
@@ -54,7 +64,7 @@ const Page = () => {
                         </div>
                         <div
                             className={`steps step2Wrap ${
-                                step == 2 ? 'active' : null
+                                stepIndex == 1 ? 'active' : null
                             }`}
                         >
                             寄送資料
@@ -63,7 +73,7 @@ const Page = () => {
                                 color="white"
                                 display="inline"
                                 onClick={() => {
-                                    setStep(3)
+                                    setStepIndex(2)
                                 }}
                             >
                                 下一步
@@ -71,7 +81,7 @@ const Page = () => {
                         </div>
                         <div
                             className={`steps step3Wrap ${
-                                step == 3 ? 'active' : null
+                                stepIndex == 2 ? 'active' : null
                             }`}
                         >
                             <Button
@@ -79,8 +89,13 @@ const Page = () => {
                                 color="white"
                                 display="inline"
                                 onClick={() => {
-                                    setStep(4)
-                                    mutationOrder()
+                                    setStepIndex(3)
+                                    let result = mutationOrder()
+                                    result.then((rs) => {
+                                        if (rs.data.order.code != 200) {
+                                            alert('資料異常，請稍後再試！')
+                                        }
+                                    })
                                 }}
                             >
                                 結帳
@@ -88,7 +103,7 @@ const Page = () => {
                         </div>
                         <div
                             className={`steps step4Wrap ${
-                                step == 4 ? 'active' : null
+                                stepIndex == 3 ? 'active' : null
                             }`}
                         >
                             {paymentResult && (

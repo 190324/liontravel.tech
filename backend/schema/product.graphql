@@ -8,7 +8,7 @@ extend type Query  {
 }
 
 extend type Mutation {
-    product(input: I_Product!, no: String): R_Product!
+    product(input: I_Product!, no: String): R_Product! @auth
 }
 
 type Product {
@@ -49,4 +49,5 @@ input I_Product {
     sale_price: Float!
     brief: String
     desp: String
+    images: Upload!
 }

@@ -86,7 +86,7 @@ func (r *queryResolver) Carts(ctx context.Context, next *int, page *int, perPage
 	oCart := &models.Cart{}
 
 	filter := &models.ICartsFilter{
-		UserID: &GetUser(ctx).ID,
+		UserID: GetUser(ctx).ID,
 	}
 
 	where := models.HandleWhere(filter)

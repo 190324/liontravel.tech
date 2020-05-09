@@ -1,5 +1,8 @@
 import styled from 'styled-components'
 
 export const StyledWrapper = styled.div`
-    background: #00f;
+    height: calc(var(--vh, 1vh) * 100 - 54px - 172px);
+    form {
+        display: none;
+    }
 `

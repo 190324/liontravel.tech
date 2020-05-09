@@ -8,10 +8,11 @@ import Loading, { LoadingType } from '@components/Loading'
 
 export const withAuth = (Component) => {
     const Wrapper = (props) => {
-        const { loading, error, data } = useQuery(QUERY_ME)
+        const { loading, error, data } = useQuery(QUERY_ME, {
+            fetchPolicy: 'no-cache',
+        })
 
         React.useEffect(() => {
-            console.log(loading, error, data)
             if (!loading && data?.me?.code != 200) {
                 Router.push('/login')
             }
