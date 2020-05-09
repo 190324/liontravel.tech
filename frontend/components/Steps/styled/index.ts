@@ -2,7 +2,7 @@ import styled, { css } from 'styled-components'
 
 const StyledMiddleLine = css`
     content: ' ';
-    width: calc(50% - 11px);
+    width: calc(50% - 12px);
     height: 2px;
     background: #000;
     display: block;
@@ -42,6 +42,7 @@ export const StyledWrapper = styled.ul<any>`
         }
         &.active {
             .serial {
+                border: 1px solid ${(props) => props.theme.colors.primary};
                 background: ${(props) => props.theme.colors.primary};
                 color: #fff;
             }

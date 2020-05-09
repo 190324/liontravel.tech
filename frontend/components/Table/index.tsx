@@ -37,7 +37,7 @@ const Component = (props) => {
                                 return (
                                     <td key={`${key}-${column.dataIndex}`}>
                                         {column.render
-                                            ? column.render(value)
+                                            ? column.render(row)
                                             : value}
                                     </td>
                                 )

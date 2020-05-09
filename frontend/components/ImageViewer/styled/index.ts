@@ -1,4 +1,5 @@
 import styled, { css } from 'styled-components'
+import { device } from '@styled/_app'
 
 const StyledSwitchArrow = css`
     color: #fff;
@@ -19,7 +20,13 @@ export const StyledWrapper = styled.div<any>`
     .viewer {
         font-size: 0;
         width: 100%;
-        max-width: 512px;
+        display: none;
+        @media ${device.tablet} {
+            display: block;
+        }
+        img {
+            width: inherit;
+        }
     }
     .imagesWrap {
         position: relative;
@@ -36,22 +43,22 @@ export const StyledWrapper = styled.div<any>`
 
 export const StyledUlWrapper = styled.ul<any>`
     margin: 0;
-    padding: 0;
-    display: flex;
-    flex-wrap: unwrap;
-    padding: 6px;
-    margin: 0 -3px;
-    overflow: hidden;
+    padding: 10px 0;
+    white-space: nowrap;
+    overflow-x: hidden;
+    @media ${device.tablet} {
+        height: auto;
+    }
     li {
-        cursor: pointer;
+        display: inline-block;
         width: 100%;
-        min-width: 120px;
-        height: 120px;
-        list-style: none;
-        font-size: 0;
-        padding: 0 5px;
+        @media ${device.tablet} {
+            width: calc(100% / 4);
+            padding: 0 5px;
+            box-sizing: border-box;
+        }
         img {
-            width: inherit;
+            width: 100%;
             height: auto;
             object-fit: cover;
         }

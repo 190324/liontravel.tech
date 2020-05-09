@@ -67,7 +67,7 @@ func (m *Cart) Save() {
     db.Save(m)
 }
 
-func (m *Cart) Find(where []Where) (*gorm.DB, interface{},  error) {
+func (m *Cart) Find(where []Where, order ...*string) (*gorm.DB, interface{},  error) {
     db, _ := config.NewDB()
 
     query := db

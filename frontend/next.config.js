@@ -33,6 +33,7 @@ function resolveTsconfigPathsToAlias({
 
 module.exports = withPWA({
     pwa: {
+        disable: false,
         dest: 'public',
     },
     exportTrailingSlash: true,

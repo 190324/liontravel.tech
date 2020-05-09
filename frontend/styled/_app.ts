@@ -29,7 +29,7 @@ export const theme = {
     colors: {
         primary: '#ff764d',
         secondary: '#ffede8',
-        success: '',
+        success: '#44b1f6',
         danger: '',
         warning: '',
         info: '#f3fafe',

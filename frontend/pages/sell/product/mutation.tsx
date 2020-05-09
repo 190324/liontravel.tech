@@ -101,13 +101,12 @@ const Page = () => {
                     />
                     <input
                         type="file"
+                        multiple
                         onChange={({ target: { validity, files } }) =>
                             setInputProduct((prev) => {
-                                let images = prev.images
-                                images = files[0]
                                 return {
                                     ...prev,
-                                    images: images,
+                                    images: files,
                                 }
                             })
                         }

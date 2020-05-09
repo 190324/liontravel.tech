@@ -19,6 +19,12 @@ const Page = () => {
         password: '',
     })
 
+    React.useEffect(() => {
+        FB.getLoginStatus(function (response) {
+            statusChangeCallback(response)
+        })
+    })
+
     const clickLogin = () => {
         let result = login({
             variables: {

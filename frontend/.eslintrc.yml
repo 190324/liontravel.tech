@@ -22,3 +22,4 @@ rules:
     no-undef: off
     react/prop-types: off
     no-case-declarations: off
+    react/display-name: off

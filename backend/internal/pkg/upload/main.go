@@ -8,6 +8,7 @@ import (
 	"os"
 	"path"
 	_ "liontravel.tech/internal/pkg/env"
+	"strings"
 )
 
 func Upload(savePath string, file graphql.Upload) (*string, error) {
@@ -20,7 +21,7 @@ func Upload(savePath string, file graphql.Upload) (*string, error) {
 		extension = "png"
 	}
 
-	imagesPath := viper.GetString("imagesPath")
+	imagesPath := viper.GetString("storagePath")
  	fullPath := path.Join(imagesPath, savePath)
 	os.MkdirAll(fullPath, os.ModePerm)
 
@@ -39,5 +40,7 @@ func Upload(savePath string, file graphql.Upload) (*string, error) {
 
 	log.Printf("%v", tempFile.Name())
 
-	return nil, nil
+	filename := strings.ReplaceAll(tempFile.Name(), fullPath + "/", "")
+
+	return &filename, nil
 }

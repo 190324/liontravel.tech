@@ -20,7 +20,7 @@ type Where struct {
 }
 
 type Paginator interface {
-	Find(where []Where) (*gorm.DB, interface{}, error)
+	Find(where []Where, order ...*string) (*gorm.DB, interface{}, error)
 }
 
 type PageInfo struct {
@@ -34,6 +34,7 @@ type PaginateSetting struct {
 	Page int
 	PerPage int
 	Where []Where
+	Order []*string
 }
 
 const (
@@ -42,8 +43,14 @@ const (
 
 func Pagination(model Paginator, setting PaginateSetting) (objects interface{}, pageInfo *PageInfo){
 	var total int
+	var query *gorm.DB
 
-	query, objects, _ := model.Find(setting.Where)
+	if setting.Order != nil {
+		query, objects, _ = model.Find(setting.Where, setting.Order...)
+	}else {
+		query, objects, _ = model.Find(setting.Where)
+	}
+
 	query.Model(model).Count(&total)
 
 	perPage := setting.PerPage

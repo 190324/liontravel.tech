@@ -1,7 +1,8 @@
 extend type Query  {
     product(no: String!): R_Product!
     products(
-        filter: I_ProductFilter,
+        filter: I_ProductFilter
+        order: [String]
         page: Int = 1
         per_page: Int = 25
     ): R_Products!
@@ -19,6 +20,7 @@ type Product {
     brief: String
     desp: String
     qty: Int!
+    images: [Storage]!
 }
 
 type R_Product {
@@ -49,5 +51,5 @@ input I_Product {
     sale_price: Float!
     brief: String
     desp: String
-    images: Upload!
+    images: [Upload!]
 }

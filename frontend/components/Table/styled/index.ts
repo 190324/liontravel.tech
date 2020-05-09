@@ -21,7 +21,7 @@ export const StyledWrapper = styled.table<any>`
         padding-top: 12px;
         padding-bottom: 12px;
         text-align: left;
-        background-color: #4caf50;
+        background-color: ${(props) => props.theme.colors.success};
         color: white;
     }
 `

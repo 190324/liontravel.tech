@@ -8,7 +8,9 @@ interface Props {
     className?: string
     no: string
     title: string
-    price: string
+    sale_price: string
+    list_price?: string
+    image: string
 }
 
 const Component: React.FC<Props> = (props) => {
@@ -25,14 +27,14 @@ const Component: React.FC<Props> = (props) => {
             <div className="imgWrap">
                 {isAmp ? (
                     <amp-img
-                        src="/static/images/switch.jpg"
+                        src={props.image}
                         width={'640'}
                         height={'640'}
                         alt={props.title}
                         layout="responsive"
                     />
                 ) : (
-                    <img src="/static/images/switch.jpg" alt={props.title} />
+                    <img src={props.image} alt={props.title} />
                 )}
             </div>
             <div className="title">
@@ -42,8 +44,12 @@ const Component: React.FC<Props> = (props) => {
             </div>
             <div className="price">
                 NT{' '}
+                <span className="listPrice">
+                    <b>{props?.list_price?.toLocaleString()}</b>
+                </span>
+                {props?.list_price ? <>&nbsp;&nbsp;</> : null}
                 <span className="primaryColor">
-                    <b>{props?.price?.toLocaleString()}</b>
+                    <b>{props?.sale_price?.toLocaleString()}</b>
                 </span>
             </div>
         </StyledWrapper>

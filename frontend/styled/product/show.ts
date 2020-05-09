@@ -1,16 +1,27 @@
 import styled from 'styled-components'
+import { device } from '@styled/_app'
 
 export const StyledWrapper = styled.div`
     max-width: ${(props) => props.theme.size.laptop};
     margin: 0 auto;
-    padding: 20px;
+    padding: 8px;
+    @media ${device.tablet} {
+        padding: 20px;
+    }
     .content {
         padding: 16px 0;
         .intro {
             display: flex;
             justify-content: space-between;
+            flex-direction: column;
+            @media ${device.tablet} {
+                flex-direction: row;
+            }
             .images {
-                width: 50%;
+                width: 100%;
+                @media ${device.tablet} {
+                    width: 50%;
+                }
             }
             .basic {
                 width: calc(50% - 20px);

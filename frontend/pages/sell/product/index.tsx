@@ -14,7 +14,17 @@ import { QUERY_PRODUCTS } from '@graphql/product'
 
 const { useEffect, useState } = React
 const columns: IColumns[] = [
-    { dataIndex: 'no', title: '產品編號' },
+    {
+        dataIndex: 'no',
+        title: '產品編號',
+        render: (value) => {
+            return (
+                <Link href={`/product/${value.no}`}>
+                    <a>{value.no}</a>
+                </Link>
+            )
+        },
+    },
     { dataIndex: 'name', title: '名稱' },
     { dataIndex: 'list_price', title: '定價' },
     { dataIndex: 'sale_price', title: '售價' },

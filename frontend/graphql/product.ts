@@ -1,17 +1,25 @@
 import gql from 'graphql-tag'
 
+export const STORAGE_PATH = '/static/images/products/'
+
 export const QUERY_PRODUCTS = gql`
-    query products {
-        products {
+    fragment productData on Product {
+        no
+        name
+        list_price
+        sale_price
+        qty
+        images {
+            path
+        }
+    }
+    query products($page: Int, $per_page: Int, $order: [String]) {
+        products(page: $page, per_page: $per_page, order: $order) {
             code
             msg
             data {
                 edges {
-                    no
-                    name
-                    list_price
-                    sale_price
-                    qty
+                    ...productData
                 }
             }
         }
@@ -30,6 +38,9 @@ export const QUERY_PRODUCT = gql`
                 list_price
                 sale_price
                 qty
+                images {
+                    path
+                }
             }
         }
     }

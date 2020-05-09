@@ -9,7 +9,7 @@ go run cmd/artisan.go model -name [User]
 Create migration sql file
 
 ```
-go run cmd/artisan.go migration -name create_users_table -create users
+go run cmd/artisan.go migration -name [create_users_table] -create [users]
 ```
 
 Run migrate sync db

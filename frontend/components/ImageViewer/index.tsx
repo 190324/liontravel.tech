@@ -8,9 +8,8 @@ interface Props {
 }
 
 const Component: React.FC<Props> = (props) => {
-    const perSize = 4
     const viewerRef = useRef(null)
-    const [addCount, setAddCount] = useState(0)
+    const [showImageIndex, setShowImageIndex] = useState(0)
 
     const clickNext = () => {
         let moveLeft =
@@ -37,36 +36,43 @@ const Component: React.FC<Props> = (props) => {
         })
     }
 
-    useEffect(() => {
-        setAddCount(perSize - (props.images.length % perSize))
-    }, [props.images])
-
     return (
         <StyledWrapper>
             <div className="viewer">
-                <img src="//via.placeholder.com/512x512" alt="" />
+                <img
+                    src={`${
+                        props.images.length > 0
+                            ? props.images[showImageIndex]
+                            : '//via.placeholder.com/512'
+                    }`}
+                    alt=""
+                />
             </div>
 
-            <div className="imagesWrap">
-                <div className="ctlPrev" onClick={clickPrev}>
-                    ◀
+            {props.images.length > 0 ? (
+                <div className="imagesWrap">
+                    <div className="ctlPrev" onClick={clickPrev}>
+                        ◀
+                    </div>
+                    <StyledUlWrapper ref={viewerRef}>
+                        {props.images.map((image, key) => {
+                            return (
+                                <li
+                                    key={key}
+                                    onClick={() => {
+                                        setShowImageIndex(key)
+                                    }}
+                                >
+                                    <img src={image} alt="" />
+                                </li>
+                            )
+                        })}
+                    </StyledUlWrapper>
+                    <div className="ctlNext" onClick={clickNext}>
+                        ▶
+                    </div>
                 </div>
-                <StyledUlWrapper ref={viewerRef}>
-                    {props.images.map((image, key) => {
-                        return (
-                            <li key={key}>
-                                <img src={image} alt="" />
-                            </li>
-                        )
-                    })}
-                    {[...Array(addCount)].map((x, i) => (
-                        <li key={i} />
-                    ))}
-                </StyledUlWrapper>
-                <div className="ctlNext" onClick={clickNext}>
-                    ▶
-                </div>
-            </div>
+            ) : null}
         </StyledWrapper>
     )
 }

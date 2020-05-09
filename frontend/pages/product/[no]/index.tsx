@@ -9,10 +9,10 @@ import ImageViewer from '@components/ImageViewer'
 import Button from '@components/Button'
 import Quantity from '@components/Quantity'
 
-import { QUERY_PRODUCT } from '@graphql/product'
+import { STORAGE_PATH, QUERY_PRODUCT } from '@graphql/product'
 import { MUTATION_CART } from '@graphql/cart'
 
-const { useState } = React
+const { useEffect, useState } = React
 
 const breadcrumbItems = [
     {
@@ -29,6 +29,7 @@ const breadcrumbItems = [
 const Page = () => {
     const router = useRouter()
     const [qty, setQty] = useState(1)
+    const [images, setImages] = useState([])
     const { loading, error, data } = useQuery(QUERY_PRODUCT, {
         variables: { no: router.query.no },
     })
@@ -58,21 +59,25 @@ const Page = () => {
         })
     }
 
+    useEffect(() => {
+        if (data?.product?.code == 200) {
+            let imgs = []
+            data.product.data.images.map((image) => {
+                imgs.push(
+                    `${STORAGE_PATH}${data.product.data.no}/${image.path}`
+                )
+            })
+            setImages(imgs)
+        }
+    }, [data])
+
     return (
         <StyledWrapper>
             <Breadcrumb items={breadcrumbItems} seperate="\" />
             <div className="content">
                 <div className="intro">
                     <div className="images">
-                        <ImageViewer
-                            images={[
-                                '//via.placeholder.com/120x120',
-                                '//via.placeholder.com/120x121',
-                                '//via.placeholder.com/120x122',
-                                '//via.placeholder.com/120x123',
-                                '//via.placeholder.com/120x124',
-                            ]}
-                        />
+                        <ImageViewer images={images} />
                     </div>
                     <div className="basic">
                         <h1>{data?.product?.data?.name}</h1>

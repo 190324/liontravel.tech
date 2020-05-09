@@ -1,33 +1,35 @@
 import * as React from 'react'
-import { useQuery } from '@apollo/react-hooks'
 import Card from '@components/Card'
 import { StyledWrapper } from './styled'
 
-import { QUERY_PRODUCTS } from '@graphql/product'
+import { STORAGE_PATH } from '@graphql/product'
 
 interface Props {
     title: string
+    data: any
 }
 
 const Container: React.FC<Props> = (props) => {
-    const { loading, error, data } = useQuery(QUERY_PRODUCTS, {
-        variables: {},
-    })
-
     return (
         <StyledWrapper>
             <div className="title">
                 <h2>{props.title}</h2>
             </div>
             <div className="itemWrap">
-                {data?.products?.data?.edges.map((row, key) => {
+                {props?.data?.map((row, key) => {
                     return (
                         <Card
                             key={key}
                             className="item"
                             no={row.no}
                             title={row.name}
-                            price={row.sale_price}
+                            sale_price={row.sale_price}
+                            list_price={row.list_price}
+                            image={
+                                row.images.length > 0
+                                    ? `${STORAGE_PATH}${row.no}/${row.images[0].path}`
+                                    : '//via.placeholder.com/300'
+                            }
                         />
                     )
                 })}

@@ -17,4 +17,9 @@ export const StyledWrapper = styled.div<any>`
         padding: 10px 0;
         text-decoration: none;
     }
+    .price {
+        .listPrice b {
+            text-decoration: line-through;
+        }
+    }
 `

@@ -5,10 +5,10 @@ package resolvers
 
 import (
 	"context"
-	"log"
+	"path"
 	"reflect"
-	"unsafe"
 
+	generated "liontravel.tech/build/gqlgen"
 	models_gen "liontravel.tech/build/gqlgen/models"
 	"liontravel.tech/internal/app/models"
 	"liontravel.tech/internal/pkg/status"
@@ -41,15 +41,37 @@ func (r *mutationResolver) Product(ctx context.Context, input models_gen.IProduc
 	oProduct.UserID = GetUser(ctx).ID
 	oProduct.Save()
 
-	log.Printf("%v", input.Images.File)
-
-	upload.Upload("products/"+oProduct.No, input.Images)
+	// 圖片處理
+	for _, image := range input.Images {
+		if image != nil {
+			filename, _ := upload.Upload(path.Join(oProduct.GetStoragePath(), oProduct.No), *image)
+			if filename != nil {
+				oStorage := &models.Storage{
+					TableFrom:   reflect.TypeOf(oProduct).Elem().Name(),
+					TableID:     oProduct.ID,
+					Path:        *filename,
+					ContentType: &image.ContentType,
+					Seq:         0,
+				}
+				oStorage.Save()
+			}
+		}
+	}
 
 	return &models_gen.RProduct{
 		Code: status.Success,
 		Msg:  "",
 		Data: oProduct,
 	}, nil
+}
+
+func (r *productResolver) Images(ctx context.Context, obj *models.Product) ([]*models.Storage, error) {
+	oStorages := &models.Storages{}
+	oStorages.FindByRelation(reflect.TypeOf(obj).Elem().Name(), obj.ID)
+
+	data := ([]*models.Storage)(*oStorages)
+
+	return data, nil
 }
 
 func (r *queryResolver) Product(ctx context.Context, no string) (*models_gen.RProduct, error) {
@@ -68,7 +90,7 @@ func (r *queryResolver) Product(ctx context.Context, no string) (*models_gen.RPr
 	}, nil
 }
 
-func (r *queryResolver) Products(ctx context.Context, filter *models_gen.IProductFilter, page *int, perPage *int) (*models_gen.RProducts, error) {
+func (r *queryResolver) Products(ctx context.Context, filter *models_gen.IProductFilter, order []*string, page *int, perPage *int) (*models_gen.RProducts, error) {
 	oProduct := &models.Product{}
 
 	where := models.HandleWhere(filter)
@@ -76,12 +98,10 @@ func (r *queryResolver) Products(ctx context.Context, filter *models_gen.IProduc
 		Page:    *page,
 		PerPage: *perPage,
 		Where:   where,
+		Order:   order,
 	})
 
-	re := list.(*models.Products)
-	rv := reflect.ValueOf(re)
-	ptr := rv.Pointer()
-	data := *(*[]*models.Product)(unsafe.Pointer(ptr))
+	data := ([]*models.Product)(*list.(*models.Products))
 
 	return &models_gen.RProducts{
 		Code: status.Success,
@@ -92,3 +112,8 @@ func (r *queryResolver) Products(ctx context.Context, filter *models_gen.IProduc
 		},
 	}, nil
 }
+
+// Product returns generated.ProductResolver implementation.
+func (r *Resolver) Product() generated.ProductResolver { return &productResolver{r} }
+
+type productResolver struct{ *Resolver }

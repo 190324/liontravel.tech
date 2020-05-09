@@ -1,6 +1,7 @@
 import styled from 'styled-components'
 
 export const StyledWrapper = styled.div`
+    margin-top: 40px;
     height: 172px;
     background: #f2f2f2;
     display: flex;

@@ -21,3 +21,8 @@ type R_Basic {
     code: Int!
     msg: String!
 }
+
+type Storage {
+    path: String!
+    content_type: String
+}

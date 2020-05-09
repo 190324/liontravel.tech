@@ -26,6 +26,10 @@ type Product struct {
 
 type Products []*Product
 
+func (m *Product) GetStoragePath() string{
+	return "images/products"
+}
+
 func (m *Product) BeforeCreate() (err error) {
 	t := time.Now()
 	year, _ := strconv.Atoi(t.Format("2006"))
@@ -72,7 +76,7 @@ func (m *Product) Save() {
 	db.Save(m)
 }
 
-func (m *Product) Find(where []Where) (*gorm.DB, interface{},  error) {
+func (m *Product) Find(where []Where, order ...*string) (*gorm.DB, interface{},  error) {
 	db, _ := config.NewDB()
 
 	query := db.Where("1=1")
@@ -87,7 +91,18 @@ func (m *Product) Find(where []Where) (*gorm.DB, interface{},  error) {
 		}
 	}
 
-	query = query.Order("id ASC")
+	if len(order) > 0 {
+		switch *order[0] {
+			case "latest":
+				query = query.Order("created_at DESC")
+			case "hot":
+				query = query.Order("sale_price DESC")
+		}
+	}else {
+		query = query.Order("id DESC")
+	}
+
+
 
 	if db.Error != nil {
 		return nil, nil, db.Error

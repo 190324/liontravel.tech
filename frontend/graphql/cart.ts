@@ -10,8 +10,12 @@ export const QUERY_CARTS = gql`
                     no
                     qty
                     product {
+                        no
                         name
                         sale_price
+                        images {
+                            path
+                        }
                     }
                 }
             }
