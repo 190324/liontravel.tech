@@ -8,29 +8,23 @@ import { StyledWrapper } from '@styled/login'
 import Input from '@components/Input'
 import Button from '@components/Button'
 import PageTitle from '@components/PageTitle'
-import FacebookLogin from 'react-facebook-login'
+import FacebookLogin from 'react-facebook-login/dist/facebook-login-render-props'
 import GoogleLogin from 'react-google-login'
 
-import { MUTATION_LOGIN } from '@graphql/user'
+import { MUTATION_LOGIN, MUTATION_TPLOGIN } from '@graphql/user'
 
 const Page = () => {
     const router = useRouter()
-    const [login, { data }] = useMutation(MUTATION_LOGIN)
+    const [login] = useMutation(MUTATION_LOGIN)
+    const [TPLogin] = useMutation(MUTATION_TPLOGIN)
     const [emailLogin, setEmailLogin] = React.useState({
         email: '',
         password: '',
     })
 
-    const clickLogin = () => {
-        let result = login({
-            variables: {
-                input: {
-                    ...emailLogin,
-                },
-            },
-        })
+    const handleLoginResponse = (result: Promise<any>, field: string) => {
         result.then((rs) => {
-            let row = rs?.data?.login
+            let row = rs?.data?.[field]
             switch (row.code) {
                 case 200:
                     let _data = row.data
@@ -61,6 +55,46 @@ const Page = () => {
         })
     }
 
+    const clickLogin = () => {
+        let result = login({
+            variables: {
+                input: {
+                    ...emailLogin,
+                },
+            },
+        })
+        handleLoginResponse(result, 'login')
+    }
+
+    const onFacebookSignin = (response) => {
+        let result = TPLogin({
+            variables: {
+                input: {
+                    name: response.name,
+                    app_type: 'facebook',
+                    app_id: response.id,
+                    access_token: response.accessToken,
+                },
+            },
+        })
+        handleLoginResponse(result, 'TPLogin')
+    }
+
+    const onGoogleSignin = (response) => {
+        var profile = response.getBasicProfile()
+        let result = TPLogin({
+            variables: {
+                input: {
+                    name: profile.getName(),
+                    app_type: 'google',
+                    app_id: profile.getId(),
+                    access_token: response.getAuthResponse().id_token,
+                },
+            },
+        })
+        handleLoginResponse(result, 'TPLogin')
+    }
+
     return (
         <StyledWrapper>
             <PageTitle>會員登入</PageTitle>
@@ -70,6 +104,7 @@ const Page = () => {
                         <Input
                             type="text"
                             name="email"
+                            value={emailLogin.email}
                             placeholder="請輸入 e-mail"
                             onChange={(value) => {
                                 setEmailLogin((prev) => {
@@ -82,6 +117,7 @@ const Page = () => {
                         <Input
                             type="password"
                             name="password"
+                            value={emailLogin.password}
                             placeholder="請輸入密碼"
                             onChange={(value) => {
                                 setEmailLogin((prev) => {
@@ -114,25 +150,39 @@ const Page = () => {
                 </div>
                 <div className="socialAuth">
                     <div className="item">
-                        {/* <Button bg="#36609F" color="white" display="block">
-                            Facebook 登入
-                        </Button> */}
                         <FacebookLogin
                             appId={process.env.FACEBOOK_APP_ID}
+                            render={(renderProps) => (
+                                <Button
+                                    onClick={renderProps.onClick}
+                                    bg="#36609F"
+                                    color="white"
+                                    display="block"
+                                >
+                                    Facebook 登入
+                                </Button>
+                            )}
                             autoLoad={false}
                             fields="name,email,picture"
-                            onClick={() => {}}
-                            callback={() => {}}
+                            callback={onFacebookSignin}
                         />
                     </div>
                     <div className="item">
-                        {/* <Button bg="#ff635e" color="white" display="block">
-                            Google 登入
-                        </Button> */}
                         <GoogleLogin
                             clientId={process.env.GOOGLE_CLIENT_ID}
-                            buttonText="Login with Google"
-                            onSuccess={() => {}}
+                            // buttonText="Login with Google"
+                            render={(renderProps) => (
+                                <Button
+                                    bg="#ff635e"
+                                    color="white"
+                                    display="block"
+                                    onClick={renderProps.onClick}
+                                    disabled={renderProps.disabled}
+                                >
+                                    Google 登入
+                                </Button>
+                            )}
+                            onSuccess={onGoogleSignin}
                             onFailure={() => {}}
                         ></GoogleLogin>
                     </div>

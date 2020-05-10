@@ -65,6 +65,7 @@ const Page = () => {
                     <Input
                         type="text"
                         name="email"
+                        value={emailSignup.email}
                         placeholder="請輸入 e-mail"
                         onChange={(value) => {
                             setEmailSignup((prev) => {
@@ -77,6 +78,7 @@ const Page = () => {
                     <Input
                         type="text"
                         name="name"
+                        value={emailSignup.name}
                         placeholder="請輸入暱稱"
                         onChange={(value) => {
                             setEmailSignup((prev) => {
@@ -89,6 +91,7 @@ const Page = () => {
                     <Input
                         type="password"
                         name="password"
+                        value={emailSignup.password}
                         placeholder="請輸入密碼"
                         onChange={(value) => {
                             setEmailSignup((prev) => {
@@ -101,6 +104,7 @@ const Page = () => {
                     <Input
                         type="password"
                         name="comfirm_password"
+                        value={emailSignup.confirm_password}
                         placeholder="確認密碼"
                         onChange={(value) => {
                             setEmailSignup((prev) => {

@@ -58,6 +58,18 @@ func (m *User) FindByNo(no string) error{
     return nil
 }
 
+func (m *User) FindByID(id int) error{
+    db, _ := config.NewDB()
+    db.Where("id = ?", id).First(m)
+
+    if db.Error != nil {
+        log.Printf("Error: %v", db.Error)
+        return db.Error
+    }
+
+    return nil
+}
+
 func (m *User) Save() {
     db, _ := config.NewDB()
 

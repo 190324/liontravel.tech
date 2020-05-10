@@ -3,7 +3,10 @@ extend type Query {
 }
 
 extend type Mutation {
+  # 一般登入
   login(input: I_Login!): R_Auth!
+  # 第三方登入
+  TPLogin(input: I_TPLogin!): R_Auth!
   user(input: I_User!): R_Basic!
 }
 
@@ -21,10 +24,15 @@ type R_Auth {
 }
 
 input I_Login {
-  email: String
-  password: String
-  app_id: String
-  app_type: String
+  email: String!
+  password: String!
+}
+
+input I_TPLogin {
+  name: String!
+  app_id: String!
+  app_type: String!
+  access_token: String!
 }
 
 input I_User {

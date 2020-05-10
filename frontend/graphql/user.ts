@@ -23,6 +23,20 @@ export const MUTATION_LOGIN = gql`
     }
 `
 
+export const MUTATION_TPLOGIN = gql`
+    mutation TPLOGIN($input: I_TPLogin!) {
+        TPLogin(input: $input) {
+            code
+            data {
+                access_token
+                refresh_token
+                token_type
+                expires
+            }
+        }
+    }
+`
+
 export const MUTATION_SIGNUP = gql`
     mutation SIGNUP($input: I_User!) {
         user(input: $input) {

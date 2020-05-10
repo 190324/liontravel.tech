@@ -15,6 +15,11 @@ export const StyledWrapper = styled.button<any>`
     font-size: 16px;
     cursor: pointer;
     width: ${(props) => (props.display == 'block' ? '100%' : 'auto')};
+    &[disabled] {
+        background-color: #cccccc;
+        color: #666666;
+        cursor: not-allowed;
+    }
 `
 
 StyledWrapper.defaultProps = {

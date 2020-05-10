@@ -54,6 +54,7 @@ const Page = () => {
                         <Input
                             type="text"
                             name="name"
+                            value={inputProduct.name}
                             placeholder="商品名稱"
                             onChange={(value) => {
                                 setInputProduct((prev) => {
@@ -67,6 +68,7 @@ const Page = () => {
                         <Input
                             type="text"
                             name="sale_price"
+                            value={inputProduct.sale_price}
                             placeholder="價格"
                             onChange={(value) => {
                                 setInputProduct((prev) => {
@@ -79,6 +81,7 @@ const Page = () => {
                         <Input
                             type="text"
                             name="qty"
+                            value={inputProduct.qty}
                             placeholder="數量"
                             onChange={(value) => {
                                 setInputProduct((prev) => {
