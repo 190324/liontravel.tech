@@ -15,15 +15,15 @@ import (
 	"liontravel.tech/internal/pkg/status"
 )
 
-func (r *mutationResolver) Order(ctx context.Context) (*models_gen.REcpay, error) {
+func (r *mutationResolver) Order(ctx context.Context, input models_gen.IOrder) (*models_gen.REcpay, error) {
 	oOrder := models.Order{}
 	oOrder.UserID = GetUser(ctx).ID
-	oOrder.UserName = GetUser(ctx).Name
-	oOrder.UserPhone = "1234567890"
-	oOrder.UserAddress = ""
-	oOrder.ReceiverName = ""
-	oOrder.ReceiverPhone = ""
-	oOrder.ReceiverAddress = ""
+	oOrder.UserName = input.UserName
+	oOrder.UserPhone = input.UserPhone
+	oOrder.UserAddress = input.UserAddress
+	oOrder.ReceiverName = input.ReceiverName
+	oOrder.ReceiverPhone = input.ReceiverPhone
+	oOrder.ReceiverAddress = input.ReceiverAddress
 	oOrder.Discount = 0
 	oOrder.Total = 0
 	oOrder.PaymentType = 0

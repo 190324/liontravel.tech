@@ -1,17 +1,36 @@
 import * as React from 'react'
-import { StyledWrapper } from './styled'
+import { StyledWrapper, StyledInputWrap, StyledLabelWrap } from './styled'
 
-const Component = (props) => {
+interface Props {
+    type: string
+    name: string
+    value?: string
+    label?: string
+    placeholder?: string
+    readonly?: boolean
+    className?: string
+    onChange: (value: string, e?: React.ChangeEvent<HTMLInputElement>) => void
+}
+
+const Component: React.FC<Props> = (props) => {
     return (
-        <StyledWrapper
-            type={props.type}
-            placeholder={props.placeholder}
-            onChange={(e) => {
-                if (props.onChange) {
-                    props.onChange(e.target.value)
-                }
-            }}
-        ></StyledWrapper>
+        <StyledWrapper className={props.className}>
+            {props.label && <StyledLabelWrap>{props.label}</StyledLabelWrap>}
+            <StyledInputWrap
+                type={props.type}
+                name={props.name}
+                value={props.value ? props.value : ''}
+                placeholder={props.placeholder}
+                onChange={(e) => {
+                    e.persist()
+                    if (props.onChange) {
+                        let target = e
+                        props.onChange(e.target.value, target)
+                    }
+                }}
+                readonly={props.readonly ? props.readonly : false}
+            ></StyledInputWrap>
+        </StyledWrapper>
     )
 }
 

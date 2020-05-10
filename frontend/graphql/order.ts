@@ -15,8 +15,8 @@ export const QUERY_ORDERS = gql`
 `
 
 export const MUTATION_ORDER = gql`
-    mutation MUTATION_ORDER {
-        order {
+    mutation MUTATION_ORDER($input: I_Order!) {
+        order(input: $input) {
             code
             msg
             data {

@@ -1,16 +1,22 @@
 import * as React from 'react'
-import { StyledWrapper } from './styled'
+import { StyledWrapper } from './styled/row'
 import Trash from '@components/Icon/Trash'
 import Quantity from '@components/Quantity'
 
 import { STORAGE_PATH } from '@graphql/product'
 interface Props {
     data: any
+    className?: string
+    onDelete: (no: string) => void
 }
 
 const Container: React.FC<Props> = (props) => {
+    const onDelete = (no: string) => {
+        props.onDelete(no)
+    }
+
     return (
-        <StyledWrapper>
+        <StyledWrapper className={props.className}>
             <div className="imgWrap">
                 <img
                     src={`${
@@ -36,7 +42,12 @@ const Container: React.FC<Props> = (props) => {
                 </div>
             </div>
             <div className="mutationWrap">
-                <Trash fontSize="24" />
+                <span
+                    className="pointer"
+                    onClick={() => onDelete(props.data.no)}
+                >
+                    <Trash fontSize="24" />
+                </span>
             </div>
         </StyledWrapper>
     )

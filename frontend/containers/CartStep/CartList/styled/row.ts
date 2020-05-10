@@ -2,7 +2,7 @@ import styled from 'styled-components'
 
 export const StyledWrapper = styled.div`
     display: flex;
-    padding: 8px;
+    border-bottom: 1px solid #ccc;
     .imgWrap {
         display: flex;
         align-items: center;

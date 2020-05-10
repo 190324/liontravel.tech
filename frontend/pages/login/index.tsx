@@ -8,6 +8,8 @@ import { StyledWrapper } from '@styled/login'
 import Input from '@components/Input'
 import Button from '@components/Button'
 import PageTitle from '@components/PageTitle'
+import FacebookLogin from 'react-facebook-login'
+import GoogleLogin from 'react-google-login'
 
 import { MUTATION_LOGIN } from '@graphql/user'
 
@@ -17,12 +19,6 @@ const Page = () => {
     const [emailLogin, setEmailLogin] = React.useState({
         email: '',
         password: '',
-    })
-
-    React.useEffect(() => {
-        FB.getLoginStatus(function (response) {
-            statusChangeCallback(response)
-        })
     })
 
     const clickLogin = () => {
@@ -118,14 +114,27 @@ const Page = () => {
                 </div>
                 <div className="socialAuth">
                     <div className="item">
-                        <Button bg="#36609F" color="white" display="block">
+                        {/* <Button bg="#36609F" color="white" display="block">
                             Facebook 登入
-                        </Button>
+                        </Button> */}
+                        <FacebookLogin
+                            appId={process.env.FACEBOOK_APP_ID}
+                            autoLoad={false}
+                            fields="name,email,picture"
+                            onClick={() => {}}
+                            callback={() => {}}
+                        />
                     </div>
                     <div className="item">
-                        <Button bg="#ff635e" color="white" display="block">
+                        {/* <Button bg="#ff635e" color="white" display="block">
                             Google 登入
-                        </Button>
+                        </Button> */}
+                        <GoogleLogin
+                            clientId={process.env.GOOGLE_CLIENT_ID}
+                            buttonText="Login with Google"
+                            onSuccess={() => {}}
+                            onFailure={() => {}}
+                        ></GoogleLogin>
                     </div>
                 </div>
             </div>

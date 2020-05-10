@@ -14,6 +14,10 @@ export const GlobalStyle = createGlobalStyle`
   .primaryColor {
       color: ${(props) => props.theme.colors.primary}
   }
+
+  .alignCenter {
+      text-align: center;
+  }
 `
 
 export const theme = {

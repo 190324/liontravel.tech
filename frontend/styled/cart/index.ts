@@ -6,13 +6,15 @@ export const StyledWrapper = styled.div`
     .stepsWrap {
         padding: 16px 0;
     }
-    .steps {
+    .stepWrap {
         display: none;
+        padding: 0 16px;
         &.active {
             display: block;
         }
     }
     .switchPageWrap {
+        padding: 16px 0;
         display: flex;
         justify-content: space-around;
     }

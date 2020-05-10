@@ -119,7 +119,6 @@ class MyDocument extends Document {
                     />
                 </Head>
                 <body>
-                    <script src="/static/scripts/facebook.sdk.js"></script>
                     {/*Google Tag Manager (noscript)*/}
                     <noscript>
                         <iframe

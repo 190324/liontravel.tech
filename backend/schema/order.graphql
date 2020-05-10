@@ -4,7 +4,7 @@ extend type Query  {
 }
 
 extend type Mutation {
-    order: R_Ecpay @auth
+    order(input: I_Order!): R_Ecpay @auth
 }
 
 type Order {
@@ -61,4 +61,13 @@ type EcpayFormParams {
 type OrdersPagination {
     page_info: PageInfo!
     edges: [Order]!
+}
+
+input I_Order {
+    user_name: String!
+    user_phone: String!
+    user_address: String!
+    receiver_name: String!
+    receiver_phone: String!
+    receiver_address: String!
 }
