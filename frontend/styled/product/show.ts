@@ -24,7 +24,10 @@ export const StyledWrapper = styled.div`
                 }
             }
             .basic {
-                width: calc(50% - 20px);
+                width: 100%;
+                @media ${device.tablet} {
+                    width: calc(50% - 20px);
+                }
                 h1 {
                     margin: 0;
                     font-size: 24px;

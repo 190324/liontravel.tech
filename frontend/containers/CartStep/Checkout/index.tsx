@@ -31,7 +31,7 @@ const Container: React.FC<Props> = (props) => {
 
     useEffect(() => {
         if (formRef) {
-            // formRef.current.submit()
+            formRef.current.submit()
         }
     }, [formRef])
 

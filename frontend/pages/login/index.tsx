@@ -50,6 +50,7 @@ const Page = () => {
                 case 406:
                     break
                 default:
+                    alert('帳號或密碼有誤')
                     break
             }
         })

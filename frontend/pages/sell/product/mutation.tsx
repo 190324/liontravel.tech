@@ -2,6 +2,7 @@ import * as React from 'react'
 import { withApollo } from '@lib/withApollo'
 import { withAuth } from '@lib/withAuth'
 import { StyledWrapper } from '@styled/sell/product/mutation'
+import Router from 'next/router'
 import { useMutation } from '@apollo/react-hooks'
 import MemberSubLayout from '@containers/MemberSubLayout'
 import Input from '@components/Input'
@@ -35,6 +36,7 @@ const Page = () => {
         result.then((rs) => {
             if (rs.data.product.code == 200) {
                 alert('新增成功')
+                Router.push(`/product/${rs.data.product.data.no}`)
             }
         })
     }

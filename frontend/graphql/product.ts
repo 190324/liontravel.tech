@@ -51,6 +51,9 @@ export const MUTATION_PRODUCT = gql`
         product(input: $input, no: $no) {
             code
             msg
+            data {
+                no
+            }
         }
     }
 `
