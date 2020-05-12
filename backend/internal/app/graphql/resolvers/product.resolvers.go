@@ -5,6 +5,7 @@ package resolvers
 
 import (
 	"context"
+	"log"
 	"path"
 	"reflect"
 
@@ -90,9 +91,16 @@ func (r *queryResolver) Product(ctx context.Context, no string) (*models_gen.RPr
 	}, nil
 }
 
-func (r *queryResolver) Products(ctx context.Context, filter *models_gen.IProductFilter, order []*string, page *int, perPage *int) (*models_gen.RProducts, error) {
+func (r *queryResolver) Products(ctx context.Context, filter *models.I_ProductFilter, order []*string, page *int, perPage *int) (*models_gen.RProducts, error) {
 	oProduct := &models.Product{}
 
+	log.Printf("==>%v", filter)
+	if filter != nil && filter.View != nil {
+		if *filter.View == "self-edit" {
+			userID := GetUser(ctx).ID
+			filter.UserID = &userID
+		}
+	}
 	where := models.HandleWhere(filter)
 	list, pageInfo := models.Pagination(oProduct, models.PaginateSetting{
 		Page:    *page,

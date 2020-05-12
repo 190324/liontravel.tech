@@ -33,7 +33,11 @@ const columns: IColumns[] = [
 
 const Page = () => {
     const { loading, error, data } = useQuery(QUERY_PRODUCTS, {
-        variables: {},
+        variables: {
+            filter: {
+                view: 'self-edit',
+            },
+        },
     })
 
     const [dataSource, setDataSource] = useState([])

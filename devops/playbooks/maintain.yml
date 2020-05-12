@@ -7,6 +7,7 @@
     projectPath: /var/www/html/liontravel.tech
     projectFrontendPath: /var/www/html/liontravel.tech/frontend
     projectBackendPath: /var/www/html/liontravel.tech/backend
+    projectPPTPath: /var/www/html/liontravel.tech/demo/ppt
     storagePath: /var/www/html/storage/liontravel.tech
   tasks:
     - name: nginx setting
@@ -111,3 +112,13 @@
         executable: /bin/bash
       vars:
         version: 1.13.9
+
+    - name: ppt yarn install
+      shell: |
+        cd {{ projectPPTPath }}
+        source ~/.nvm/nvm.sh
+        yarn
+        yarn build
+
+      args:
+        executable: /bin/bash

@@ -13,8 +13,18 @@ export const QUERY_PRODUCTS = gql`
             path
         }
     }
-    query products($page: Int, $per_page: Int, $order: [String]) {
-        products(page: $page, per_page: $per_page, order: $order) {
+    query products(
+        $filter: I_ProductFilter
+        $page: Int
+        $per_page: Int
+        $order: [String]
+    ) {
+        products(
+            filter: $filter
+            page: $page
+            per_page: $per_page
+            order: $order
+        ) {
             code
             msg
             data {

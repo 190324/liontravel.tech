@@ -42,6 +42,7 @@ type ProductsPagination {
 
 input I_ProductFilter {
     name: String
+    view: String
 }
 
 input I_Product {

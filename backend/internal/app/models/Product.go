@@ -26,6 +26,12 @@ type Product struct {
 
 type Products []*Product
 
+type I_ProductFilter struct {
+	Name   *string `json:"name"`
+	View   *string `json:"view"`
+	UserID *int    `json:"user_id"`
+}
+
 func (m *Product) GetStoragePath() string{
 	return "images/products"
 }
@@ -85,7 +91,13 @@ func (m *Product) Find(where []Where, order ...*string) (*gorm.DB, interface{}, 
 		if item.Column == "name" {
 			value := fmt.Sprintf("%%%v%%", item.Value)
 			query = query.Where(item.Column + " LIKE ?", value)
-		} else {
+		} else if item.Column == "view" {
+
+			if item.Value == "self-edit" {
+				// 設定預覽條件
+			}
+
+		}else {
 			value := item.Value
 			query = query.Where(item.Column + " = ?", value)
 		}

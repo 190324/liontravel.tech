@@ -5,6 +5,7 @@ package resolvers
 
 import (
 	"context"
+
 	models_gen "liontravel.tech/build/gqlgen/models"
 	"liontravel.tech/internal/app/middlewares"
 	"liontravel.tech/internal/app/models"
@@ -44,13 +45,13 @@ func (r *mutationResolver) TPLogin(ctx context.Context, input models_gen.ITPLogi
 	 */
 	oOpenID := &models.OpenID{
 		AppType: input.AppType,
-		AppID: input.AppID,
+		AppID:   input.AppID,
 	}
 
 	oUser := &models.User{}
 	userID := oOpenID.GetUserID()
 
-	if  userID == 0 {
+	if userID == 0 {
 		oUser.Name = input.Name
 		oUser.Save()
 
@@ -67,10 +68,9 @@ func (r *mutationResolver) TPLogin(ctx context.Context, input models_gen.ITPLogi
 
 	return &models_gen.RAuth{
 		Code: code,
-		Msg: "",
+		Msg:  "",
 		Data: oAuth,
 	}, nil
-
 }
 
 func (r *mutationResolver) User(ctx context.Context, input models_gen.IUser) (*models_gen.RBasic, error) {
