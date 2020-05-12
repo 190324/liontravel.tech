@@ -1,0 +1,452 @@
+import {
+  CodeSurfer,
+  CodeSurferColumns,
+  Step,
+} from "code-surfer";
+import { github, vsDark } from "@code-surfer/themes";
+
+export const theme = vsDark;
+
+# LionTech
+
+[190324/liontravel.tech](https://github.com/190324/liontravel.tech)
+
+---
+
+<CodeSurfer>
+
+```js
+
+LionTech
+|-- backend
+|-- demo
+|-- devops
+|-- frontend
+|-- storage
+|-- .gitignore
+|-- README.md
+
+
+```
+
+</CodeSurfer>
+
+---
+
+<CodeSurferColumns themes={[vsDark, github]}>
+
+<Step>
+
+```js
+Default
+code path: /demo/default
+```
+
+```js
+LionTech
+code path: /frontend
+```
+
+</Step>
+
+<Step>
+
+```js
+default
+|-- pages
+|   |-- api
+|   |   `-- hello.js
+|   `-- index.js
+|-- public
+|   |-- favicon.ico
+|   `-- vercel.svg
+|-- .gitignore
+|-- package.json
+|-- README.md
+
+```
+
+```js
+frontend
+|-- components
+|   |-- Button
+|       |-- styled
+|       |   `-- index.ts
+|       `-- index.tsx
+|   |-- ...
+|-- container
+|   |-- Layout
+|       |-- styled
+|       |   `-- index.ts
+|       `-- index.tsx
+|   |-- ...
+|-- graphql
+|   |-- ...
+|   `-- user.ts
+|-- lib
+|   |-- ...
+|   `-- withAuth.ts
+|-- pages
+|   |-- ...
+|   `-- index.tsx
+|-- styled
+|   |-- ...
+|   `-- index.ts
+|-- ...
+|-- ecosystem.yml
+|-- next.config.js
+|-- README.md
+
+```
+
+</Step>
+
+<Step>
+
+```js
+
+code path: /demo/default/package.json
+
+{
+  "name": "default",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start"
+  },
+  "dependencies": {
+    "next": "9.4.0",
+    "react": "16.13.1",
+    "react-dom": "16.13.1"
+  }
+}
+
+```
+
+
+```js
+
+code path: /frontend/package.json
+
+{
+    "name": "liontravel.tech",
+    "version": "1.0.0",
+    "main": "index.js",
+    "license": "MIT",
+    "scripts": {
+        "dev": "next",
+        "build": "next build",
+        "export-static": "next build && next export",
+        "start": "next start"
+    },
+    "dependencies": {
+        "@apollo/react-hooks": "^3.1.5",
+        "@apollo/react-ssr": "^3.1.5",
+        "@tinymce/tinymce-react": "^3.6.0",
+        "apollo-cache-inmemory": "^1.6.5",
+        "apollo-client": "^2.6.8",
+        "apollo-link-context": "^1.0.20",
+        "apollo-upload-client": "^13.0.0",
+        "dotenv-webpack": "^1.7.0",
+        "graphql": "^15.0.0",
+        "graphql-tag": "^2.10.3",
+        "isomorphic-unfetch": "^3.0.0",
+        "js-cookie": "^2.2.1",
+        "jwt-decode": "^2.2.0",
+        "next": "^9.3.6",
+        "next-pwa": "^2.4.0",
+        "nprogress": "^0.2.0",
+        "react": "^16.13.1",
+        "react-dom": "^16.13.1",
+        "react-facebook-login": "^4.1.1",
+        "react-google-login": "^5.1.14",
+        "styled-components": "^5.1.0"
+    },
+    "devDependencies": {
+        "@types/apollo-upload-client": "^8.1.3",
+        "@types/js-cookie": "^2.2.6",
+        "@types/jwt-decode": "^2.2.1",
+        "@types/node": "^13.13.5",
+        "@types/react": "^16.9.34",
+        "@types/styled-components": "^5.1.0",
+        "@typescript-eslint/eslint-plugin": "^2.31.0",
+        "@typescript-eslint/parser": "^2.31.0",
+        "eslint": "^7.0.0",
+        "eslint-plugin-react": "^7.19.0",
+        "typescript": "^3.8.3",
+        "webpack-merge": "^4.2.2"
+    }
+}
+
+```
+
+</Step>
+
+</CodeSurferColumns>
+
+---
+
+<CodeSurfer>
+
+```js title="pages 型別"
+
+interface Props {}
+
+const Page:NextPage<Props> = (props) => {
+
+  return (<p>部長好！！</p>)
+
+}
+
+export default Page
+
+```
+
+```diff 4[12:19]
+
+```
+
+```js
+
+(alias) type NextPage<P = {}, IP = P> = (React.ComponentClass<P, any> & {
+    getInitialProps?(context: NextPageContext): IP | Promise<IP>;
+}) | (React.FunctionComponent<P> & {
+    ...;
+})
+
+```
+
+```diff 3[3:20]
+
+```
+
+</CodeSurfer>
+
+---
+
+<CodeSurfer>
+
+```js title="SSR"
+
+const Page = () => {
+  // Render data...
+}
+
+Page.getInitialProps = async ctx => {
+     const res = await fetch('...')
+     const json = await res.json()
+     return { name: json.Error }
+}
+
+```
+
+```js
+
+const Page = () => {
+  // Render data...
+}
+
+// This gets called on every request
+export async function getServerSideProps() {
+  // Fetch data from external API
+  const res = await fetch(`https://.../data`)
+  const data = await res.json()
+
+  // Pass data to the page via props
+  return { props: { data } }
+}
+
+```
+
+```js title="SSG"
+
+// This also gets called at build time
+export async function getStaticProps({ params }) {
+  // params contains the post `id`.
+  // If the route is like /posts/1, then params.id is 1
+  const res = await fetch(`https://.../posts/${params.id}`)
+  const post = await res.json()
+
+  // Pass post data to the page via props
+  return { props: { post } }
+}
+
+```
+
+```js
+
+// This function gets called at build time
+export async function getStaticPaths() {
+  return {
+    // Only `/posts/1` and `/posts/2` are generated at build time
+    paths: [{ params: { id: '1' } }, { params: { id: '2' } }],
+    // Enable statically generating additional pages
+    // For example: `/posts/3`
+    fallback: true,
+  }
+}
+
+```
+
+</CodeSurfer>
+
+---
+
+<CodeSurfer>
+
+```js title="GraphQL"
+
+code path: /frontend/graphql/cart.ts
+
+import gql from 'graphql-tag'
+
+export const QUERY_CARTS = gql`
+    query carts {
+        carts {
+            code
+            msg
+            data {
+                edges {
+                    no
+                    qty
+                    product {
+                        no
+                        name
+                        sale_price
+                        images {
+                            path
+                        }
+                    }
+                }
+            }
+        }
+    }
+`
+```
+
+```js
+
+export const MUTATION_DELCART = gql`
+    mutation MUTATION_DELCART($no: String!) {
+        delCart(no: $no) {
+            code
+            msg
+        }
+    }
+`
+
+```
+
+</CodeSurfer>
+
+---
+
+<CodeSurfer>
+
+```js title="AMP 設定"
+import { useAmp } from 'next/amp'
+
+export const config = { amp: 'hybrid' }
+
+interface Props {...}
+
+const Page:React.FC<Props> = (props) => {
+  const isAmp = useAmp()
+  return (
+        <div>
+            {isAmp ? (
+                <amp-img
+                    src={props.image}
+                    width={'640'}
+                    height={'640'}
+                    alt={props.title}
+                    layout="responsive"
+                />
+            ) : (
+                <img src={props.image} alt={props.title} />
+            )}
+        </div>
+  )
+}
+
+export default Page
+
+```
+
+```diff 1,3,8,11,12
+
+```
+
+</CodeSurfer>
+
+---
+
+<CodeSurfer>
+
+```js
+
+code path: /frontend/next.config.js
+
+resolve: {
+    alias: {
+        ...resolveTsconfigPathsToAlias({
+            tsconfigPath: './tsconfig.json',
+        }),
+    },
+},
+
+```
+
+```js
+
+{
+    "compilerOptions": {
+        ...
+        "baseUrl": ".",
+        "paths": {
+            "@root/*": ["./*"],
+            "@containers/*": ["./containers/*"],
+            "@components/*": ["./components/*"],
+            "@lib/*": ["lib/*"],
+            "@styled/*": ["styled/*"],
+            "@graphql/*": ["graphql/*"]
+        }
+    },
+    "exclude": ["node_modules"],
+    "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"]
+}
+
+```
+
+```js
+
+code path: /frontend/next.config.js
+
+const Dotenv = require('dotenv-webpack')
+
+plugins: [new Dotenv()]
+
+```
+
+</CodeSurfer>
+
+---
+
+<CodeSurfer>
+
+```js title="PWA 設定"
+
+const withPWA = require('next-pwa')
+
+module.exports = withPWA({
+    pwa: {
+        disable: true,
+        dest: 'public',
+    },
+    ...
+
+```
+
+</CodeSurfer>

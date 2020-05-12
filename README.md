@@ -1,39 +1,7 @@
 # LionTravel.Tech
 
-## 需絕對路徑
+## 需要在同層目錄下建立 storage 存放相關之設定檔
+
+## storage 的圖片路徑需要做軟連結指向 /frontend/public
 
 ln -s /your/storage/path/\* /your/project/path/public/static
-
-categories
-id
-name
-parent_id
-
-orders
-id
-no
-user_id
-user_name
-user_phone
-user_address
-receiver_name
-receiver_phone
-receiver_address
-status
-discount
-total
-
-order_items
-id
-order_id
-product_id
-qty
-price
-
-order_logs
-id
-order_id
-type => status, payment
-value
-payload
-simulate
