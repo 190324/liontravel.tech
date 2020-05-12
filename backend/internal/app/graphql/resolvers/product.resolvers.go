@@ -101,7 +101,8 @@ func (r *queryResolver) Products(ctx context.Context, filter *models_gen.IProduc
 		Order:   order,
 	})
 
-	data := ([]*models.Product)(*list.(*models.Products))
+	//data := ([]*models.Product)(*list.(*models.Products))
+	data := *list.(*models.Products)
 
 	return &models_gen.RProducts{
 		Code: status.Success,
