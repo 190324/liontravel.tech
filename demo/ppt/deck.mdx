@@ -226,11 +226,48 @@ export default Page
 
 ---
 
+#### NextJS 9.3
+
+<table>
+    <tr>
+        <td></td>
+        <td>Server</td>
+        <td>Client</td>
+        <td>When</td>
+    </tr>
+    <tr>
+        <td> &nbsp;&nbsp;&nbsp;&nbsp;getStaticProps </td>
+        <td>V</td>
+        <td>X</td>
+        <td>build time</td>
+    </tr>
+     <tr>
+        <td> &nbsp;&nbsp;&nbsp;&nbsp;getStaticPaths </td>
+        <td>V</td>
+        <td>X</td>
+        <td>build time</td>
+    </tr>
+     <tr>
+        <td> &nbsp;&nbsp;&nbsp;&nbsp;getServerSideProps </td>
+        <td>V</td>
+        <td>X</td>
+        <td>by request</td>
+    </tr>
+     <tr>
+        <td> &nbsp;&nbsp;&nbsp;&nbsp;getInitialProps </td>
+        <td>V</td>
+        <td>V</td>
+        <td>by request</td>
+    </tr>
+</table>
+
+---
+
 <CodeSurfer>
 
 ```js title="SSR"
 
-const Page = () => {
+const Page = (props) => {
   // Render data...
 }
 
@@ -244,7 +281,7 @@ Page.getInitialProps = async ctx => {
 
 ```js
 
-const Page = () => {
+const Page = (props) => {
   // Render data...
 }
 
@@ -294,9 +331,201 @@ export async function getStaticPaths() {
 
 ---
 
+<CodeSurferColumns themes={[vsDark, github]}>
+
+<Step>
+
+```js title="Routing"
+
+|-- pages
+|   |-- index.js
+|   `-- about.js
+
+```
+
+```js
+
+import Link from 'next/link'
+
+function Home() {
+  return (
+    <ul>
+      <li>
+        <Link href="/">
+          <a>Home</a>
+        </Link>
+      </li>
+      <li>
+        <Link href="/about">
+          <a>About Us</a>
+        </Link>
+      </li>
+    </ul>
+  )
+}
+
+```
+
+</Step>
+
+<Step>
+
+```js
+
+|-- pages
+|   |-- blog
+|   |   `-- [slug].js
+|   |-- index.js
+|   `-- about.js
+
+
+```
+
+```js
+
+import Link from 'next/link'
+
+function Home() {
+  return (
+    <ul>
+      <li>
+        <Link href="/blog/[slug]" as="/blog/神秘卻又親密的王董">
+          <a>To Hello World Blog post</a>
+        </Link>
+      </li>
+    </ul>
+  )
+}
+
+```
+
+</Step>
+
+</CodeSurferColumns>
+
+---
+
+<CodeSurferColumns themes={[vsDark, github]}>
+
+<Step>
+
+```js title="Imperatively"
+
+import Router from 'next/router'
+
+function ReadMore() {
+  return (
+    <div>
+      Click 
+      <span onClick={() => {
+          Router.push('/about')
+      }}>
+        here
+      </span> 
+      to read more
+    </div>
+  )
+}
+
+```
+
+```js
+
+import Router from 'next/router'
+
+function ReadDetail() {
+  return (
+    <div>
+      Click 
+      <span onClick={() => {
+          Router.push('/blog/[slug]', '/blog/神秘卻又親密的王董')
+      }}>
+        here
+      </span> 
+      to read detail
+    </div>
+  )
+}
+
+```
+
+</Step>
+
+</CodeSurferColumns>
+
+---
+
 <CodeSurfer>
 
-```js title="GraphQL"
+```js title="Shallow Routing"
+
+import { useEffect } from 'react'
+import { useRouter } from 'next/router'
+
+// Current URL is '/'
+function Page() {
+  const router = useRouter()
+
+  useEffect(() => {
+    // Always do navigations after the first render
+    router.push('/?counter=10', undefined, { shallow: true })
+  }, [])
+
+  useEffect(() => {
+    // The counter changed!
+  }, [router.query.counter])
+}
+
+export default Page
+
+```
+
+```diff 11[42:59]
+
+```
+
+</CodeSurfer>
+
+---
+
+<CodeSurfer>
+
+```js
+
+import dynamic from 'next/dynamic'
+
+const DynamicComponent = dynamic(() =>
+  import('../components/hello').then(mod => mod.Hello), 
+  {
+    ssr: false
+  }
+)
+
+function Home() {
+  return (
+    <div>
+      <Header />
+      <DynamicComponent />
+      <p>HOME PAGE is here!</p>
+    </div>
+  )
+}
+
+export default Home
+
+```
+
+```diff 4:9
+
+```
+
+</CodeSurfer>
+
+---
+
+<CodeSurfer>
+
+```js title="GraphQL/Query"
 
 code path: /frontend/graphql/cart.ts
 
@@ -326,7 +555,19 @@ export const QUERY_CARTS = gql`
 `
 ```
 
-```js
+```diff 15,16,17,18
+
+```
+
+
+
+</CodeSurfer>
+
+---
+
+<CodeSurfer>
+
+```js title="GraphQL/mutation"
 
 export const MUTATION_DELCART = gql`
     mutation MUTATION_DELCART($no: String!) {
@@ -345,7 +586,34 @@ export const MUTATION_DELCART = gql`
 
 <CodeSurfer>
 
+```js title="GraphQL Cache"
+
+code path: /frontend/pages/cart/index.tsx
+
+import { useQuery } from '@apollo/react-hooks'
+
+const Page = () => {
+    const { loading, error, data, refetch } = useQuery(QUERY_CARTS, {
+        fetchPolicy: 'no-cache',
+    })
+    const [mutationOrder, { data: paymentResult }] = useMutation(MUTATION_ORDER)
+    ...
+}
+
+```
+
+```diff 8
+
+```
+
+</CodeSurfer>
+
+---
+
+<CodeSurfer>
+
 ```js title="AMP 設定"
+
 import { useAmp } from 'next/amp'
 
 export const config = { amp: 'hybrid' }
@@ -385,7 +653,28 @@ export default Page
 
 <CodeSurfer>
 
-```js
+```js title="PWA 設定"
+
+code path: /frontend/next.config.js
+
+const withPWA = require('next-pwa')
+
+module.exports = withPWA({
+    pwa: {
+        disable: false,
+        dest: 'public',
+    },
+    ...
+
+```
+
+</CodeSurfer>
+
+---
+
+<CodeSurfer>
+
+```js title="webpack 設定"
 
 code path: /frontend/next.config.js
 
@@ -434,19 +723,46 @@ plugins: [new Dotenv()]
 
 ---
 
-<CodeSurfer>
+<CodeSurferColumns themes={[vsDark, github]}>
 
-```js title="PWA 設定"
+<Step>
 
-const withPWA = require('next-pwa')
+```js title="TypeScript 3.7 Optional Chaining"
 
-module.exports = withPWA({
-    pwa: {
-        disable: false,
-        dest: 'public',
-    },
-    ...
+if (foo && foo.bar && foo.bar.baz) {
+    // ...
+}
 
 ```
 
-</CodeSurfer>
+```js
+
+if (foo?.bar?.baz) {
+    // ...
+}
+
+```
+
+</Step>
+
+</CodeSurferColumns>
+
+---
+
+### Utility Types
+
+    Partial<T>
+    Readonly<T>
+    Record<K,T>
+    Pick<T,K>
+    Omit<T,K>
+    Exclude<T,U>
+    Extract<T,U>
+    ...
+
+---
+
+[frontendmasters](https://frontendmasters.com/books/front-end-handbook/2019/)
+
+[code-surfer](https://github.com/pomber/code-surfer)
+

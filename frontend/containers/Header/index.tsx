@@ -56,9 +56,9 @@ const Container = () => {
                         </div>
                     </div>
                     <div className="inner">
-                        <div className="item">
+                        {/* <div className="item">
                             <Search color="#FFF" fontSize="18px" />
-                        </div>
+                        </div> */}
 
                         {!isLogin ? (
                             <>
@@ -75,9 +75,9 @@ const Container = () => {
                             </>
                         ) : (
                             <>
-                                <div className="item">
+                                {/* <div className="item">
                                     <Bell color="#FFF" fontSize="20px" />
-                                </div>
+                                </div> */}
                                 <div
                                     className="item"
                                     onClick={() => Router.push('/cart')}
