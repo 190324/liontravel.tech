@@ -45,7 +45,7 @@ const Page = () => {
                         domain: process.env.AUTH_DOMAIN,
                     })
 
-                    router.push('/member', '/member')
+                    router.push('/sell/product/')
                     break
                 case 406:
                     break
@@ -141,9 +141,9 @@ const Page = () => {
                         <Link href="/signup">
                             <a>免費註冊</a>
                         </Link>
-                        <Link href="/">
+                        {/* <Link href="/">
                             <a>忘記密碼</a>
-                        </Link>
+                        </Link> */}
                     </div>
                 </div>
                 <div className="or">

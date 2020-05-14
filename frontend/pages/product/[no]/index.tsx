@@ -48,6 +48,8 @@ const Page = () => {
                 case 200:
                     if (isCheckout) {
                         Router.push('/cart')
+                    } else {
+                        alert('已加入購物車!')
                     }
                     break
                 case 401:
