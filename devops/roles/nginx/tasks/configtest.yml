@@ -1,7 +1,0 @@
----
-- name: nginx config test
-  shell: |
-    nginx -t
-  become: yes
-  notify:
-    - restart nginx
