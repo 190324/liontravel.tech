@@ -1,0 +1,48 @@
+extend type Query  {
+    category(no: String!
+    ): R_Category!
+    categories(filter: I_CategoryFilter!
+    ): R_Categories!
+}
+
+extend type Mutation {
+    category(input: I_Category!, no: String): R_Category! @auth
+    reorderCategory(input: I_ReorderCategory): String! @auth
+}
+
+type Category {
+    no: String!
+    name: String!
+    image: String
+    subclass: [Category]
+    seq: Int!
+}
+
+type R_Category {
+    code: Int!
+    msg: String!
+    data: Category
+}
+
+type R_Categories {
+    code: Int!
+    msg: String!
+    data: [Category]
+}
+
+input I_CategoryFilter {
+    user_no: String
+}
+
+input I_Category {
+    no: String
+    name: String!
+    image: Upload
+    parent_no: String
+    seq: Int = 0
+}
+
+input I_ReorderCategory {
+    no: String!
+    order: Int!
+}

@@ -21,7 +21,7 @@ const Component: React.FC<Props> = (props) => {
         <StyledWrapper
             className={`${props?.className} pointer`}
             onClick={() => {
-                router.push('/product/[no]', `/product/${props.no}`)
+                router.push('/[no]', `/${props.no}`)
             }}
         >
             <div className="imgWrap">
@@ -38,7 +38,7 @@ const Component: React.FC<Props> = (props) => {
                 )}
             </div>
             <div className="title">
-                <Link href={`/product/[no]`} as={`/product/${props.no}`}>
+                <Link href={`/[no]`} as={`/${props.no}`}>
                     <a>{props.title}</a>
                 </Link>
             </div>

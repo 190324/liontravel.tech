@@ -44,7 +44,9 @@ func Auth() func(http.Handler) http.Handler {
 				return
 			}
 
-			oUser.FindByNo(claims.No)
+			models.GetRow(oUser, &models.User{
+				No: claims.No,
+			})
 			ctxValue := map[string]interface{}{
 				"user": oUser,
 				"status": status,

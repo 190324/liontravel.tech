@@ -7,7 +7,6 @@ import (
     "liontravel.tech/config"
     "liontravel.tech/internal/pkg/encrypt"
     _ "liontravel.tech/internal/pkg/env"
-    "log"
     "strconv"
     "time"
 )
@@ -43,50 +42,23 @@ func (m *User) BeforeCreate() (err error) {
     middle := fmt.Sprintf("%v%v",diffYear, t.Format("0102"))
     m.No = GenerateNo("U", middle, 5)
 
-    return
-}
-
-func (m *User) FindByNo(no string) error{
-    db, _ := config.NewDB()
-    db.Where("no = ?", no).First(m)
-
-    if db.Error != nil {
-        log.Printf("Error: %v", db.Error)
-        return db.Error
-    }
-
-    return nil
-}
-
-func (m *User) FindByID(id int) error{
-    db, _ := config.NewDB()
-    db.Where("id = ?", id).First(m)
-
-    if db.Error != nil {
-        log.Printf("Error: %v", db.Error)
-        return db.Error
-    }
-
-    return nil
-}
-
-func (m *User) Save() {
-    db, _ := config.NewDB()
-
-    originPassword := m.Password
-
-    if m.No != "" {
-         db = db.FirstOrInit(m, User{
-            No: m.No,
-        })
-    }
-
-    if originPassword != nil {
-        hash := encrypt.Bcrypt(*originPassword)
+    if m.Password != nil {
+        hash := m.HashPassword(*m.Password)
         m.Password = &hash
     }
 
-    db.Save(m)
+    return
+}
+
+func (m *User) HashPassword(pass string) string{
+    hash := encrypt.Bcrypt(pass)
+    return hash
+}
+
+func (m *User) UpdatePassword()  {
+    hash := m.HashPassword(*m.Password)
+    m.Password = &hash
+    Save(m)
 }
 
 func (m *User) Check() bool{

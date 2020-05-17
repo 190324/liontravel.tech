@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"github.com/jinzhu/gorm"
 	"liontravel.tech/config"
-	"log"
 	"strconv"
 	"time"
 )
@@ -44,42 +43,6 @@ func (m *Product) BeforeCreate() (err error) {
 	m.No = GenerateNo("P", middle, 7)
 
 	return
-}
-
-func (m *Product) FindByNo(no string) error{
-	db, _ := config.NewDB()
-	db.Where("no = ?", no).First(m)
-
-	if db.Error != nil {
-		log.Printf("Error: %v", db.Error)
-		return db.Error
-	}
-
-	return nil
-}
-
-func (m *Product) FindByID(id int) error{
-	db, _ := config.NewDB()
-	db.Where("id = ?", id).First(m)
-
-	if db.Error != nil {
-		log.Printf("Error: %v", db.Error)
-		return db.Error
-	}
-
-	return nil
-}
-
-func (m *Product) Save() {
-	db, _ := config.NewDB()
-
-	if m.No != "" {
-		db = db.FirstOrInit(m, Product{
-			No: m.No,
-		})
-	}
-
-	db.Save(m)
 }
 
 func (m *Product) Find(where []Where, order ...*string) (*gorm.DB, interface{},  error) {

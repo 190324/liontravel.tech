@@ -19,11 +19,6 @@ type Storage struct {
 
 type Storages []*Storage
 
-func (m *Storage) Save() {
-    db, _ := config.NewDB()
-    db.Save(m)
-}
-
 func (m *Storages) FindByRelation(tableFrom string, tableID int) {
     db, _ := config.NewDB()
 

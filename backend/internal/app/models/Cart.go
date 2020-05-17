@@ -7,7 +7,6 @@ import (
     "liontravel.tech/config"
     "strconv"
     "time"
-    "log"
 )
 
 type Cart struct {
@@ -38,33 +37,6 @@ func (m *Cart) BeforeCreate() (err error) {
     m.No = GenerateNo("C", middle, 7) + subUuid
 
     return
-}
-
-func (m *Cart) FindByNo(no string) error{
-    db, _ := config.NewDB()
-    db.Where("no = ?", no).First(m)
-
-    if db.Error != nil {
-        log.Printf("Error: %v", db.Error)
-        return db.Error
-    }
-
-    return nil
-}
-
-
-func (m *Cart) FindByPIDnUID(productID int, userID int)  {
-    db, _ := config.NewDB()
-    db = db.FirstOrInit(m, Cart{
-        ProductID: productID,
-        UserID: userID,
-        DeletedAt: nil,
-    })
-}
-
-func (m *Cart) Save() {
-    db, _ := config.NewDB()
-    db.Save(m)
 }
 
 func (m *Cart) Find(where []Where, order ...*string) (*gorm.DB, interface{},  error) {

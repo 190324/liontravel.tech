@@ -13,19 +13,19 @@ import (
 )
 
 func (r *mutationResolver) Login(ctx context.Context, input models_gen.ILogin) (*models_gen.RAuth, error) {
-	oUser := &models.User{
+	o := &models.User{
 		Email:    &input.Email,
 		Password: &input.Password,
 	}
 
-	isValid := oUser.Check()
+	isValid := o.Check()
 
 	var code int
 
 	oAuth := &models.AuthToken{}
 	if isValid {
 		code = status.Success
-		oAuth = oUser.AuthToken()
+		oAuth = o.AuthToken()
 	} else {
 		code = status.Unauthorized
 		oAuth = nil
@@ -38,6 +38,7 @@ func (r *mutationResolver) Login(ctx context.Context, input models_gen.ILogin) (
 	}, nil
 }
 
+// TP => ThirdParty
 func (r *mutationResolver) TPLogin(ctx context.Context, input models_gen.ITPLogin) (*models_gen.RAuth, error) {
 	/*  todo:
 	 *	驗證 access_token 合法性
@@ -48,23 +49,25 @@ func (r *mutationResolver) TPLogin(ctx context.Context, input models_gen.ITPLogi
 		AppID:   input.AppID,
 	}
 
-	oUser := &models.User{}
+	o := &models.User{}
 	userID := oOpenID.GetUserID()
 
 	if userID == 0 {
-		oUser.Name = input.Name
-		oUser.Save()
+		o.Name = input.Name
+		models.Save(o)
 
-		oOpenID.UserID = oUser.ID
-		oOpenID.Save()
+		oOpenID.UserID = o.ID
+		models.Save(oOpenID)
 	} else {
-		oUser.FindByID(userID)
+		models.GetRow(o, &models.User{
+			ID: userID,
+		})
 	}
 
 	var code int
 	var oAuth *models.AuthToken
 	code = status.Success
-	oAuth = oUser.AuthToken()
+	oAuth = o.AuthToken()
 
 	return &models_gen.RAuth{
 		Code: code,
@@ -74,17 +77,17 @@ func (r *mutationResolver) TPLogin(ctx context.Context, input models_gen.ITPLogi
 }
 
 func (r *mutationResolver) User(ctx context.Context, input models_gen.IUser) (*models_gen.RBasic, error) {
-	oUser := &models.User{
+	o := &models.User{
 		Name:     input.Name,
 		Email:    input.Email,
 		Password: input.Password,
 	}
 
 	if IsLogin(ctx) {
-		oUser.No = GetUser(ctx).No
+		o.No = GetUser(ctx).No
 	}
 
-	oUser.Save()
+	models.Save(o)
 
 	return &models_gen.RBasic{
 		Code: status.Success,

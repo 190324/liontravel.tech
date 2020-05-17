@@ -31,8 +31,3 @@ func (m *OpenID) GetUserID() int{
 
     return userID
 }
-
-func (m *OpenID) Save() {
-    db, _ := config.NewDB()
-    db.Save(m)
-}

@@ -1,11 +1,10 @@
 package models
 
 import (
+    "fmt"
     "go.mongodb.org/mongo-driver/x/mongo/driver/uuid"
-    "liontravel.tech/config"
     "strconv"
     "time"
-    "fmt"
 )
 
 type Order struct {
@@ -37,9 +36,4 @@ func (m *Order) BeforeCreate() (err error) {
     m.No = GenerateNo("O", middle, 7) + subUuid
 
     return
-}
-
-func (m *Order) Save() {
-    db, _ := config.NewDB()
-    db.Save(m)
 }

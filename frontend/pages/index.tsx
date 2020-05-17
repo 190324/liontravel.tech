@@ -24,7 +24,7 @@ const Page = () => {
 
     return (
         <StyledWrapper>
-            {/* <div className="banner"></div> */}
+            <div className="banner"></div>
             <CardGroup
                 title="最新商品"
                 data={latestProducts?.products?.data?.edges}

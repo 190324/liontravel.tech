@@ -5,7 +5,6 @@ package resolvers
 
 import (
 	"context"
-	"log"
 	"path"
 	"reflect"
 
@@ -17,44 +16,53 @@ import (
 )
 
 func (r *mutationResolver) Product(ctx context.Context, input models_gen.IProduct, no *string) (*models_gen.RProduct, error) {
-	oProduct := &models.Product{}
+	o := &models.Product{}
 
 	if no != nil {
-		oProduct.FindByNo(*no)
+		error := models.GetRow(o, &models.Product{
+			No: *no,
+		})
+
+		if error != nil {
+			return &models_gen.RProduct{
+				Code: status.BadRequest,
+				Msg:  error.Error(),
+			}, nil
+		}
 
 		if IsLogin(ctx) {
-			if oProduct.UserID != GetUser(ctx).ID {
+			if o.UserID != GetUser(ctx).ID {
 				return &models_gen.RProduct{
 					Code: status.BadRequest,
-					Msg:  "",
+					Msg:  "您無法編輯",
 					Data: nil,
 				}, nil
 			}
 		}
 	}
 
-	oProduct.Name = input.Name
-	oProduct.SalePrice = input.SalePrice
-	oProduct.ListPrice = input.ListPrice
-	oProduct.Qty = input.Qty
-	oProduct.Brief = input.Brief
-	oProduct.Desp = input.Desp
-	oProduct.UserID = GetUser(ctx).ID
-	oProduct.Save()
+	o.Name = input.Name
+	o.SalePrice = input.SalePrice
+	o.ListPrice = input.ListPrice
+	o.Qty = input.Qty
+	o.Brief = input.Brief
+	o.Desp = input.Desp
+	o.UserID = GetUser(ctx).ID
+	models.Save(o)
 
 	// 圖片處理
 	for _, image := range input.Images {
 		if image != nil {
-			filename, _ := upload.Upload(path.Join(oProduct.GetStoragePath(), oProduct.No), *image)
+			filename, _ := upload.Upload(path.Join(o.GetStoragePath(), o.No), *image)
 			if filename != nil {
-				oStorage := &models.Storage{
-					TableFrom:   reflect.TypeOf(oProduct).Elem().Name(),
-					TableID:     oProduct.ID,
+				oStor := &models.Storage{
+					TableFrom:   reflect.TypeOf(o).Elem().Name(),
+					TableID:     o.ID,
 					Path:        *filename,
 					ContentType: &image.ContentType,
 					Seq:         0,
 				}
-				oStorage.Save()
+				models.Save(oStor)
 			}
 		}
 	}
@@ -62,39 +70,43 @@ func (r *mutationResolver) Product(ctx context.Context, input models_gen.IProduc
 	return &models_gen.RProduct{
 		Code: status.Success,
 		Msg:  "",
-		Data: oProduct,
+		Data: o,
 	}, nil
 }
 
 func (r *productResolver) Images(ctx context.Context, obj *models.Product) ([]*models.Storage, error) {
-	oStorages := &models.Storages{}
-	oStorages.FindByRelation(reflect.TypeOf(obj).Elem().Name(), obj.ID)
+	oStor := &models.Storages{}
+	oStor.FindByRelation(reflect.TypeOf(obj).Elem().Name(), obj.ID)
 
-	data := ([]*models.Storage)(*oStorages)
+	data := ([]*models.Storage)(*oStor)
 
 	return data, nil
 }
 
 func (r *queryResolver) Product(ctx context.Context, no string) (*models_gen.RProduct, error) {
-	oProduct := &models.Product{}
+	o := &models.Product{}
 
-	error := oProduct.FindByNo(no)
+	error := models.GetRow(o, &models.Product{
+		No: no,
+	})
 
 	if error != nil {
-		return nil, error
+		return &models_gen.RProduct{
+			Code: status.BadRequest,
+			Msg:  error.Error(),
+		}, nil
 	}
 
 	return &models_gen.RProduct{
 		Code: status.Success,
 		Msg:  "success",
-		Data: oProduct,
+		Data: o,
 	}, nil
 }
 
 func (r *queryResolver) Products(ctx context.Context, filter *models.I_ProductFilter, order []*string, page *int, perPage *int) (*models_gen.RProducts, error) {
-	oProduct := &models.Product{}
+	o := &models.Product{}
 
-	log.Printf("==>%v", filter)
 	if filter != nil && filter.View != nil {
 		if *filter.View == "self-edit" {
 			userID := GetUser(ctx).ID
@@ -102,14 +114,13 @@ func (r *queryResolver) Products(ctx context.Context, filter *models.I_ProductFi
 		}
 	}
 	where := models.HandleWhere(filter)
-	list, pageInfo := models.Pagination(oProduct, models.PaginateSetting{
+	list, pageInfo := models.Pagination(o, models.PaginateSetting{
 		Page:    *page,
 		PerPage: *perPage,
 		Where:   where,
 		Order:   order,
 	})
 
-	//data := ([]*models.Product)(*list.(*models.Products))
 	data := *list.(*models.Products)
 
 	return &models_gen.RProducts{

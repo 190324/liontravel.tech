@@ -19,9 +19,9 @@ const menuList = [
     {
         name: '我的賣場',
         items: [
-            { name: '賣場設定', url: '/sell', isRoutePush: true },
-            { name: '分類設定', url: '/sell/category', isRoutePush: true },
-            { name: '商品設定', url: '/sell/product', isRoutePush: true },
+            { name: '賣場設定', url: '/seller', isRoutePush: true },
+            { name: '分類設定', url: '/seller/category', isRoutePush: true },
+            { name: '商品設定', url: '/seller/product', isRoutePush: true },
         ],
     },
 ]

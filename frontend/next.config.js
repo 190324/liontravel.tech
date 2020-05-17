@@ -30,13 +30,13 @@ function resolveTsconfigPathsToAlias({
 
     return aliases
 }
-
-module.exports = withPWA({
-    pwa: {
-        disable: false,
-        dest: 'public',
-    },
-    exportTrailingSlash: true,
+//withPWA
+module.exports = {
+    // pwa: {
+    //     disable: false,
+    //     dest: 'public',
+    // },
+    // exportTrailingSlash: true,
     webpack: (config, options) => {
         const setting = {
             module: {
@@ -67,4 +67,4 @@ module.exports = withPWA({
 
         return merge(config, setting)
     },
-})
+}

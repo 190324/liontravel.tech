@@ -20,11 +20,6 @@ type OrderItem struct {
 
 type OrderItems []*OrderItem
 
-func (m *OrderItem) Save() {
-    db, _ := config.NewDB()
-    db.Save(m)
-}
-
 func (m *OrderItems) FindAllByOrderID(orderID int) {
 
     db, _ := config.NewDB()

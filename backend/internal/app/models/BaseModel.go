@@ -3,6 +3,7 @@ package models
 import (
 	"github.com/iancoleman/strcase"
 	"github.com/jinzhu/gorm"
+	"liontravel.tech/config"
 	"math"
 	"reflect"
 	"time"
@@ -41,6 +42,35 @@ const (
 	MaxPerPage = 25
 )
 
+// common db operation
+func GetRow(model interface{}, where ...interface{}) (err error){
+	db, _ := config.NewDB()
+	result := db.First(model, where...)
+
+	if err := result.Error; err != nil {
+		return err
+	}
+
+	return
+}
+
+func Save(model interface{}) (err error){
+	db, err := config.NewDB()
+
+	if err != nil {
+		return
+	}
+
+	result := db.Save(model)
+
+	if err = result.Error; err != nil {
+		return err
+	}
+
+	return
+}
+
+// pagination
 func Pagination(model Paginator, setting PaginateSetting) (objects interface{}, pageInfo *PageInfo){
 	var total int
 	var query *gorm.DB

@@ -6,9 +6,6 @@ package resolvers
 import (
 	"context"
 	"fmt"
-	"reflect"
-	"unsafe"
-
 	models_gen "liontravel.tech/build/gqlgen/models"
 	"liontravel.tech/internal/app/models"
 	"liontravel.tech/internal/pkg/cashflow/ecpay"
@@ -16,19 +13,19 @@ import (
 )
 
 func (r *mutationResolver) Order(ctx context.Context, input models_gen.IOrder) (*models_gen.REcpay, error) {
-	oOrder := models.Order{}
-	oOrder.UserID = GetUser(ctx).ID
-	oOrder.UserName = input.UserName
-	oOrder.UserPhone = input.UserPhone
-	oOrder.UserAddress = input.UserAddress
-	oOrder.ReceiverName = input.ReceiverName
-	oOrder.ReceiverPhone = input.ReceiverPhone
-	oOrder.ReceiverAddress = input.ReceiverAddress
-	oOrder.Discount = 0
-	oOrder.Total = 0
-	oOrder.PaymentType = 0
-	oOrder.PaymentVendor = 0
-	oOrder.Save()
+	o := models.Order{}
+	o.UserID = GetUser(ctx).ID
+	o.UserName = input.UserName
+	o.UserPhone = input.UserPhone
+	o.UserAddress = input.UserAddress
+	o.ReceiverName = input.ReceiverName
+	o.ReceiverPhone = input.ReceiverPhone
+	o.ReceiverAddress = input.ReceiverAddress
+	o.Discount = 0
+	o.Total = 0
+	o.PaymentType = 0
+	o.PaymentVendor = 0
+	models.Save(o)
 
 	// 購物車結算
 	oCart := &models.Cart{}
@@ -39,36 +36,40 @@ func (r *mutationResolver) Order(ctx context.Context, input models_gen.IOrder) (
 	query, oCarts, _ := oCart.Find(where)
 	query.Find(oCarts)
 
-	re := oCarts.(*models.Carts)
-	rv := reflect.ValueOf(re)
-	ptr := rv.Pointer()
-	carts := *(*[]*models.Cart)(unsafe.Pointer(ptr))
+	carts := *oCarts.(*models.Carts)
 
 	var total float64 = 0
 	for _, item := range carts {
-		oOrderItem := &models.OrderItem{}
-		oProduct := &models.Product{}
-		oProduct.FindByID(item.ProductID)
+		oItem := &models.OrderItem{}
+		oProd := &models.Product{}
+		error := models.GetRow(oProd, &models.Product{
+			ID: item.ProductID,
+		})
 
-		if oProduct.ID > 0 {
-			oOrderItem.OrderID = oOrder.ID
-			oOrderItem.ProductID = oProduct.ID
-			oOrderItem.Qty = item.Qty
-			oOrderItem.Price = oProduct.SalePrice
-			oOrderItem.Save()
-
-			total = total + float64(oOrderItem.Qty)*oOrderItem.Price
+		if error != nil {
+			return &models_gen.REcpay{
+				Code: status.Success,
+				Msg:  error.Error(),
+			}, nil
 		}
+
+		oItem.OrderID = o.ID
+		oItem.ProductID = oProd.ID
+		oItem.Qty = item.Qty
+		oItem.Price = oProd.SalePrice
+		models.Save(oItem)
+
+		total = total + float64(oItem.Qty)*oItem.Price
 	}
 
 	// 寫入總額
-	oOrder.Total = total
-	oOrder.Save()
+	o.Total = total
+	models.Save(o)
 
 	oOrderItems := &models.OrderItems{}
-	oOrderItems.FindAllByOrderID(oOrder.ID)
+	oOrderItems.FindAllByOrderID(o.ID)
 
-	result := ecpay.CreateOrder(oOrder, *oOrderItems)
+	result := ecpay.CreateOrder(o, *oOrderItems)
 	oCart.DeleteByUserID(GetUser(ctx).ID)
 
 	return &models_gen.REcpay{
