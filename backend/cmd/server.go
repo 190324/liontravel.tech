@@ -6,9 +6,11 @@ import (
 	"errors"
 	"github.com/99designs/gqlgen/graphql"
 	"github.com/99designs/gqlgen/graphql/handler"
+	"github.com/99designs/gqlgen/graphql/handler/transport"
 	"github.com/99designs/gqlgen/graphql/playground"
 	"github.com/go-chi/chi"
 	"github.com/go-chi/cors"
+	"github.com/gorilla/websocket"
 	"github.com/spf13/viper"
 	generated "liontravel.tech/build/gqlgen"
 	models_gen "liontravel.tech/build/gqlgen/models"
@@ -19,6 +21,7 @@ import (
 	"log"
 	"net/http"
 	"runtime/debug"
+	"time"
 )
 
 func main() {
@@ -42,6 +45,14 @@ func main() {
 		log.Print(err)
 		debug.PrintStack()
 		return errors.New("user message on panic")
+	})
+	srv.AddTransport(transport.Websocket{
+		KeepAlivePingInterval: 10 * time.Second,
+		Upgrader: websocket.Upgrader{
+			CheckOrigin: func(r *http.Request) bool {
+				return true
+			},
+		},
 	})
 
 	router := chi.NewRouter()

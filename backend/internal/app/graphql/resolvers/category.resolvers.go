@@ -6,11 +6,11 @@ package resolvers
 import (
 	"context"
 	"fmt"
-	"liontravel.tech/internal/pkg/status"
 
 	generated "liontravel.tech/build/gqlgen"
 	models_gen "liontravel.tech/build/gqlgen/models"
 	"liontravel.tech/internal/app/models"
+	"liontravel.tech/internal/pkg/status"
 )
 
 func (r *categoryResolver) Subclass(ctx context.Context, obj *models.Category) ([]*models.Category, error) {
@@ -28,7 +28,7 @@ func (r *mutationResolver) Category(ctx context.Context, input models_gen.ICateg
 		if error != nil {
 			return &models_gen.RCategory{
 				Code: status.BadRequest,
-				Msg: error.Error(),
+				Msg:  error.Error(),
 			}, nil
 		}
 	}
@@ -41,17 +41,16 @@ func (r *mutationResolver) Category(ctx context.Context, input models_gen.ICateg
 	if err != nil {
 		return &models_gen.RCategory{
 			Code: status.BadRequest,
-			Msg: err.Error(),
+			Msg:  err.Error(),
 			Data: nil,
 		}, nil
 	}
 
 	return &models_gen.RCategory{
 		Code: status.Success,
-		Msg: "",
+		Msg:  "",
 		Data: o,
 	}, nil
-
 }
 
 func (r *mutationResolver) ReorderCategory(ctx context.Context, input *models_gen.IReorderCategory) (string, error) {

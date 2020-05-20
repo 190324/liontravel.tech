@@ -38,7 +38,6 @@ func (r *mutationResolver) Login(ctx context.Context, input models_gen.ILogin) (
 	}, nil
 }
 
-// TP => ThirdParty
 func (r *mutationResolver) TPLogin(ctx context.Context, input models_gen.ITPLogin) (*models_gen.RAuth, error) {
 	/*  todo:
 	 *	驗證 access_token 合法性

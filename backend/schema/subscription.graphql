@@ -1,0 +1,7 @@
+type Example {
+    message: String
+}
+
+type Subscription {
+    exampleAdded(room_id: Int!): Example!
+}

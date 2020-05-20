@@ -5,6 +5,7 @@ package resolvers
 
 import (
 	"context"
+
 	generated "liontravel.tech/build/gqlgen"
 	models_gen "liontravel.tech/build/gqlgen/models"
 	"liontravel.tech/internal/app/models"
@@ -42,7 +43,7 @@ func (r *mutationResolver) Cart(ctx context.Context, productNo string, qty int) 
 
 	error = models.GetRow(o, &models.Cart{
 		ProductID: oProd.ID,
-		UserID: GetUser(ctx).ID,
+		UserID:    GetUser(ctx).ID,
 	})
 
 	if error == nil {

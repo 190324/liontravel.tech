@@ -14,7 +14,11 @@ const menuList = [
     },
     {
         name: '訂單管理',
-        items: [{ name: '歷史訂單', url: '/member/order', isRoutePush: true }],
+        items: [
+            { name: '歷史訂單', url: '/member/order', isRoutePush: true },
+            { name: '我的最愛', url: '/member', isRoutePush: true },
+            { name: '購物車', url: '/member', isRoutePush: true },
+        ],
     },
     {
         name: '我的賣場',
@@ -22,6 +26,7 @@ const menuList = [
             { name: '賣場設定', url: '/seller', isRoutePush: true },
             { name: '分類設定', url: '/seller/category', isRoutePush: true },
             { name: '商品設定', url: '/seller/product', isRoutePush: true },
+            { name: '訂單管理', url: '/seller/product', isRoutePush: true },
         ],
     },
 ]
