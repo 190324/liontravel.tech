@@ -16,6 +16,7 @@
         "apollo-cache-inmemory": "^1.6.5",
         "apollo-client": "^2.6.8",
         "apollo-link-context": "^1.0.20",
+        "apollo-link-ws": "^1.0.20",
         "apollo-upload-client": "^13.0.0",
         "dotenv-webpack": "^1.7.0",
         "graphql": "^15.0.0",
@@ -31,7 +32,8 @@
         "react-dom": "^16.13.1",
         "react-facebook-login": "^4.1.1",
         "react-google-login": "^5.1.14",
-        "styled-components": "^5.1.0"
+        "styled-components": "^5.1.0",
+        "subscriptions-transport-ws": "^0.9.16"
     },
     "devDependencies": {
         "@types/apollo-upload-client": "^8.1.3",

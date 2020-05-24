@@ -24,36 +24,48 @@ import (
 	"time"
 )
 
+func myHandler() http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+
+		Config := generated.Config{Resolvers: &resolvers.Resolver{}}
+		Config.Directives.Auth = func(ctx context.Context, obj interface{}, next graphql.Resolver) (interface{}, error) {
+			if !resolvers.IsLogin(ctx) {
+				return &models_gen.RBasic{
+					Code: status.Unauthorized,
+					Msg: "",
+				}, nil
+			}
+
+			return next(ctx)
+		}
+		srv := handler.NewDefaultServer(generated.NewExecutableSchema(Config))
+		srv.SetRecoverFunc(func(ctx context.Context, err interface{}) (userMessage error) {
+			// send this panic somewhere
+			log.Print(err)
+			debug.PrintStack()
+			return errors.New("user message on panic")
+		})
+		srv.AddTransport(transport.Websocket{
+			KeepAlivePingInterval: 10 * time.Second,
+			Upgrader: websocket.Upgrader{
+				ReadBufferSize:  1024,
+				WriteBufferSize: 1024,
+				CheckOrigin: func(r *http.Request) bool {
+					log.Printf("==>%v", r.Host)
+					return true
+				},
+			},
+		})
+
+		srv.ServeHTTP(w,r)
+	})
+}
+
 func main() {
 
 	port := viper.GetString("server.port")
 
-	Config := generated.Config{Resolvers: &resolvers.Resolver{}}
-	Config.Directives.Auth = func(ctx context.Context, obj interface{}, next graphql.Resolver) (interface{}, error) {
-		if !resolvers.IsLogin(ctx) {
-			return &models_gen.RBasic{
-				Code: status.Unauthorized,
-				Msg: "",
-			}, nil
-		}
-
-		return next(ctx)
-	}
-	srv := handler.NewDefaultServer(generated.NewExecutableSchema(Config))
-	srv.SetRecoverFunc(func(ctx context.Context, err interface{}) (userMessage error) {
-		// send this panic somewhere
-		log.Print(err)
-		debug.PrintStack()
-		return errors.New("user message on panic")
-	})
-	srv.AddTransport(transport.Websocket{
-		KeepAlivePingInterval: 10 * time.Second,
-		Upgrader: websocket.Upgrader{
-			CheckOrigin: func(r *http.Request) bool {
-				return true
-			},
-		},
-	})
+	//
 
 	router := chi.NewRouter()
 
@@ -72,10 +84,9 @@ func main() {
 	router.Use(middlewares.Auth())
 
 	router.Group(func(r chi.Router) {
-
 		r.Route("/graphql", func(r chi.Router) {
 			r.Handle("/playground", playground.Handler("LionTech", "/graphql"))
-			r.Handle("/", srv)
+			r.Handle("/", myHandler())
 		})
 	})
 

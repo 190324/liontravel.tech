@@ -8,6 +8,10 @@ import { setContext } from 'apollo-link-context'
 import fetch from 'isomorphic-unfetch'
 import Cookies from 'js-cookie'
 
+import { split } from 'apollo-link'
+import { WebSocketLink } from 'apollo-link-ws'
+import { getMainDefinition } from 'apollo-utilities'
+
 let globalApolloClient = null
 
 /**
@@ -160,10 +164,40 @@ function createApolloClient(initialState = {}) {
         }
     })
 
+    // Create a WebSocket link:
+    const wsLink = process.browser
+        ? new WebSocketLink({
+              uri: `ws://localhost:8080/query`,
+              //uri: 'ws://api-gokahoot.herokuapp.com/query',
+              options: {
+                  connectionParams: () => {
+                      const auth = { Authorization: 'Bearer ...' }
+                      // return auth.headers
+                  },
+                  reconnect: true,
+              },
+          })
+        : null
+
+    const link = process.browser
+        ? split(
+              // split based on operation type
+              ({ query }) => {
+                  const definition = getMainDefinition(query)
+                  return (
+                      definition.kind === 'OperationDefinition' &&
+                      definition.operation === 'subscription'
+                  )
+              },
+              wsLink,
+              httpLink
+          )
+        : httpLink
+
     // Check out https://github.com/zeit/next.js/pull/4611 if you want to use the AWSAppSyncClient
     return new ApolloClient({
         ssrMode: typeof window === 'undefined', // Disables forceFetch on the server (so queries are only run once)
-        link: authLink.concat(httpLink),
+        link: authLink.concat(link),
         cache: new InMemoryCache().restore(initialState),
     })
 }
