@@ -6,7 +6,6 @@ import Head from 'next/head'
 import Router, { useRouter } from 'next/router'
 import { GlobalStyle, theme } from '@styled/_app'
 import { ThemeProvider } from 'styled-components'
-import Layout from '@containers/Layout'
 import NProgress from 'nprogress'
 
 Router.events.on('routeChangeStart', (url) => {
@@ -48,9 +47,7 @@ const MyApp: NextPage<AppProps> = ({ Component, pageProps }) => {
                 )}
             </Head>
             <ThemeProvider theme={theme}>
-                <Layout>
-                    <Component {...pageProps} key={router.route} />
-                </Layout>
+                <Component {...pageProps} key={router.route} />
                 <GlobalStyle />
             </ThemeProvider>
         </>

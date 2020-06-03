@@ -17,6 +17,7 @@ export const StyledWrapper = styled.div`
         h2 {
             display: inline-block;
             padding: 0 10px;
+            margin: 0;
             position: relative;
             &:before {
                 ${StyledTitleLine}
@@ -27,16 +28,35 @@ export const StyledWrapper = styled.div`
                 right: -20px;
             }
         }
+        h3 {
+            font-family: 'Pinyon Script', cursive;
+            font-size: 14px;
+            padding: 0;
+            margin: 0;
+            position: relative;
+            width: fit-content;
+            padding: 0 10px;
+            margin: 0 auto;
+            &:before {
+                content: '';
+                display: inline-block;
+                position: absolute;
+                width: 100%;
+                height: 6px;
+                text-align: center;
+                left: 0;
+                top: 4px;
+                background: ${(props) => props.theme.colors.primary};
+                z-index: -1;
+            }
+        }
     }
     .itemWrap {
         display: flex;
         flex-wrap: wrap;
         .item {
-            width: calc(100% - 16px);
+            width: calc(50% - 16px);
             margin: 8px;
-            @media ${device.tablet} {
-                width: calc(50% - 16px);
-            }
             @media ${device.laptop} {
                 width: calc(25% - 16px);
             }

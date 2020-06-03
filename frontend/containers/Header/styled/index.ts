@@ -3,7 +3,7 @@ import { device } from '@styled/_app'
 
 export const StyledWrapper = styled.div`
     height: 54px;
-    background: ${(props) => props.theme.colors.primary};
+    background: ${(props) => props.theme.colors.secondary};
     .innerWrap {
         height: inherit;
         display: flex;
@@ -22,7 +22,7 @@ export const StyledWrapper = styled.div`
                     font-size: 20px;
                     padding: 0 4px;
                     a {
-                        color: #fff;
+                        color: ${(props) => props.theme.colors.primary};
                         text-decoration: none;
                     }
                 }
@@ -30,6 +30,9 @@ export const StyledWrapper = styled.div`
                     a {
                         color: #fff;
                         text-decoration: none;
+                        &:hover {
+                            color: ${(props) => props.theme.colors.primary};
+                        }
                     }
                 }
             }

@@ -7,6 +7,7 @@ import { STORAGE_PATH } from '@graphql/product'
 interface Props {
     title: string
     data: any
+    subTitle?: string
 }
 
 const Container: React.FC<Props> = (props) => {
@@ -14,6 +15,7 @@ const Container: React.FC<Props> = (props) => {
         <StyledWrapper>
             <div className="title">
                 <h2>{props.title}</h2>
+                {props.subTitle ? <h3>{props.subTitle}</h3> : null}
             </div>
             <div className="itemWrap">
                 {props?.data?.map((row, key) => {

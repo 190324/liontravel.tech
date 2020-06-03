@@ -31,8 +31,8 @@ export const theme = {
         desktop: '2560px',
     },
     colors: {
-        primary: '#ff764d',
-        secondary: '#ffede8',
+        primary: '#eed07f',
+        secondary: '#000',
         success: '#44b1f6',
         danger: '',
         warning: '',

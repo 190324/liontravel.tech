@@ -1,7 +1,10 @@
 import * as React from 'react'
+import Layout from '@containers/Layout'
 import { useQuery } from '@apollo/react-hooks'
 import { withApollo } from '@lib/withApollo'
 import { StyledWrapper } from '@styled/index'
+import Header from '@containers/Header'
+import Banner from '@components/Banner'
 import CardGroup from '@containers/CardGroup'
 
 import { QUERY_PRODUCTS } from '@graphql/product'
@@ -23,17 +26,27 @@ const Page = () => {
     ] = queryMultiple()
 
     return (
-        <StyledWrapper>
-            <div className="banner"></div>
-            <CardGroup
-                title="最新商品"
-                data={latestProducts?.products?.data?.edges}
-            />
-            <CardGroup
-                title="熱銷商品"
-                data={hotProducts?.products?.data?.edges}
-            />
-        </StyledWrapper>
+        <>
+            <Header />
+            <Banner />
+            <Layout hasHeader={false}>
+                <StyledWrapper>
+                    <CardGroup
+                        title="最新商品"
+                        subTitle="New Products"
+                        data={latestProducts?.products?.data?.edges}
+                    />
+                    <div className="adWrap">
+                        <img src="https://via.placeholder.com/640x100" alt="" />
+                    </div>
+                    <CardGroup
+                        title="熱銷商品"
+                        subTitle="Hot Products"
+                        data={hotProducts?.products?.data?.edges}
+                    />
+                </StyledWrapper>
+            </Layout>
+        </>
     )
 }
 

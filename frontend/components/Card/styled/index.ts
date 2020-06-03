@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 
 export const StyledWrapper = styled.div<any>`
-    background: ${(props) => props.theme.colors.info};
+    border: 1px solid ${(props) => props.theme.colors.primary};
     display: inline-block;
     width: 100%
     border-radius: 8px;

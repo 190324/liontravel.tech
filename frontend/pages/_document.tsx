@@ -32,6 +32,10 @@ class MyDocument extends Document {
             <Html>
                 <Head>
                     <script src={`/static/scripts/gtm.js`}></script>
+                    <link
+                        href="https://fonts.googleapis.com/css2?family=Pinyon+Script&display=swap"
+                        rel="stylesheet"
+                    ></link>
 
                     <meta name="application-name" content="LionTech PWA APP" />
                     <meta name="apple-mobile-web-app-capable" content="yes" />

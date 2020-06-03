@@ -1,8 +1,17 @@
 import * as React from 'react'
 import Link from 'next/link'
+import dynamic from 'next/dynamic'
 import { useRouter } from 'next/router'
 import { useAmp } from 'next/amp'
 import { StyledWrapper } from './styled'
+import { useTheme } from 'styled-components'
+
+const RoughNotation: any = dynamic(
+    () => import('react-rough-notation').then((mod) => mod.RoughNotation),
+    {
+        ssr: false,
+    }
+)
 
 interface Props {
     className?: string
@@ -14,8 +23,10 @@ interface Props {
 }
 
 const Component: React.FC<Props> = (props) => {
+    const theme = useTheme()
     const router = useRouter()
     const isAmp = useAmp()
+    const [isNotation, setIsNotation] = React.useState(false)
 
     return (
         <StyledWrapper
@@ -23,6 +34,8 @@ const Component: React.FC<Props> = (props) => {
             onClick={() => {
                 router.push('/[no]', `/${props.no}`)
             }}
+            onMouseEnter={() => setIsNotation(true)}
+            onMouseLeave={() => setIsNotation(false)}
         >
             <div className="imgWrap">
                 {isAmp ? (
@@ -39,7 +52,15 @@ const Component: React.FC<Props> = (props) => {
             </div>
             <div className="title">
                 <Link href={`/[no]`} as={`/${props.no}`}>
-                    <a>{props.title}</a>
+                    <a>
+                        <RoughNotation
+                            type="highlight"
+                            show={isNotation}
+                            color={theme.colors.primary}
+                        >
+                            {props.title}
+                        </RoughNotation>
+                    </a>
                 </Link>
             </div>
             <div className="price">

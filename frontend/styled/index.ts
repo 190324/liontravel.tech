@@ -1,8 +1,14 @@
 import styled from 'styled-components'
 
 export const StyledWrapper = styled.div`
-    .banner {
-        height: 240px;
-        background: ${(props) => props.theme.colors.secondary};
+    margin-top: 30px;
+    .adWrap {
+        margin-top: 30px;
+        text-align: center;
+        img {
+            object-fit: cover;
+            width: auto;
+            max-width: 100%;
+        }
     }
 `

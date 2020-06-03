@@ -1,4 +1,5 @@
 import * as React from 'react'
+import Layout from '@containers/Layout'
 import { withApollo } from '@lib/withApollo'
 import { useQuery } from '@apollo/react-hooks'
 import { useMutation } from '@apollo/react-hooks'
@@ -74,54 +75,60 @@ const Page = () => {
     }, [data])
 
     return (
-        <StyledWrapper>
-            <Breadcrumb items={breadcrumbItems} seperate="\" />
-            <div className="content">
-                <div className="intro">
-                    <div className="images">
-                        <ImageViewer images={images} />
-                    </div>
-                    <div className="basic">
-                        <h1>{data?.product?.data?.name}</h1>
-                        <div
-                            className="brief"
-                            dangerouslySetInnerHTML={{
-                                __html: data?.product?.data?.brief,
-                            }}
-                        />
-                        <div className="price">
-                            NT{' '}
-                            <span className="primaryColor">
-                                <b>
-                                    {data?.product?.data?.sale_price.toLocaleString()}
-                                </b>
-                            </span>
+        <Layout>
+            <StyledWrapper>
+                <Breadcrumb items={breadcrumbItems} seperate="\" />
+                <div className="content">
+                    <div className="intro">
+                        <div className="images">
+                            <ImageViewer images={images} />
                         </div>
-                        <div className="qty">
-                            <Quantity
-                                value={qty}
-                                onChange={(value) => {
-                                    setQty(value)
+                        <div className="basic">
+                            <h1>{data?.product?.data?.name}</h1>
+                            <div
+                                className="brief"
+                                dangerouslySetInnerHTML={{
+                                    __html: data?.product?.data?.brief,
                                 }}
                             />
-                        </div>
-                        <div>
-                            <Button bg="secondary" onClick={clickAddCart}>
-                                加入購物車
-                            </Button>{' '}
-                            <Button
-                                bg="primary"
-                                color="white"
-                                onClick={() => clickAddCart(true)}
-                            >
-                                立即結帳
-                            </Button>
+                            <div className="price">
+                                NT{' '}
+                                <span className="primaryColor">
+                                    <b>
+                                        {data?.product?.data?.sale_price.toLocaleString()}
+                                    </b>
+                                </span>
+                            </div>
+                            <div className="qty">
+                                <Quantity
+                                    value={qty}
+                                    onChange={(value) => {
+                                        setQty(value)
+                                    }}
+                                />
+                            </div>
+                            <div>
+                                <Button
+                                    bg="secondary"
+                                    color="white"
+                                    onClick={clickAddCart}
+                                >
+                                    加入購物車
+                                </Button>{' '}
+                                <Button
+                                    bg="primary"
+                                    color="black"
+                                    onClick={() => clickAddCart(true)}
+                                >
+                                    立即結帳
+                                </Button>
+                            </div>
                         </div>
                     </div>
+                    <div></div>
                 </div>
-                <div></div>
-            </div>
-        </StyledWrapper>
+            </StyledWrapper>
+        </Layout>
     )
 }
 
