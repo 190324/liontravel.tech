@@ -172,6 +172,7 @@ const Page = () => {
                         <GoogleLogin
                             clientId={process.env.GOOGLE_CLIENT_ID}
                             // buttonText="Login with Google"
+                            onAutoLoadFinished={() => {}}
                             render={(renderProps) => (
                                 <Button
                                     bg="#ff635e"
